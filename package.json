@@ -1,0 +1,74 @@
+{
+  "name": "kefetchup",
+  "version": "0.0.0",
+  "description": "Simple fetch client API to spice up your application",
+  "keywords": [],
+  "main": "dist/kefetchup.umd.js",
+  "module": "dist/kefetchup.es5.js",
+  "typings": "dist/types/kefetchup.d.ts",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "author": "Karen <dev.kaskar2008@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc --module commonjs && rollup -c rollup.config.ts",
+    "start": "rollup -c rollup.config.ts -w",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:prod": "npm run lint && npm run test -- --coverage --no-cache",
+    "report-coverage": "cat ./coverage/lcov.info | coveralls"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testEnvironment": "node",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 95,
+        "lines": 95,
+        "statements": 95
+      }
+    },
+    "collectCoverage": true
+  },
+  "devDependencies": {
+    "@types/jest": "^22.0.0",
+    "@types/node": "^10.0.3",
+    "colors": "^1.1.2",
+    "coveralls": "^3.0.0",
+    "cross-env": "^5.0.1",
+    "jest": "^22.0.2",
+    "rimraf": "^2.6.1",
+    "rollup": "^0.59.2",
+    "rollup-plugin-commonjs": "^9.0.0",
+    "rollup-plugin-json": "^3.0.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-typescript2": "^0.13.0",
+    "ts-jest": "^22.0.0",
+    "ts-node": "^6.0.0",
+    "typescript": "^3.0.0"
+  }
+}
