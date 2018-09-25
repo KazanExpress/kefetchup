@@ -29,10 +29,11 @@
     "report-coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "jest": {
+    "testURL": "http://google.com/",
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
       "ts",
@@ -41,7 +42,8 @@
     ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      "/test/"
+      "/test/",
+      "/dist/"
     ],
     "coverageThreshold": {
       "global": {
@@ -60,6 +62,7 @@
     "colors": "^1.1.2",
     "coveralls": "^3.0.0",
     "cross-env": "^5.0.1",
+    "isomorphic-fetch": "^2.2.1",
     "jest": "^22.0.2",
     "lodash.camelcase": "^4.3.0",
     "rimraf": "^2.6.1",
