@@ -47,14 +47,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
-var client_1 = require("./client");
-var KeFetchUpJsonClient = /** @class */ (function (_super) {
-    __extends(KeFetchUpJsonClient, _super);
-    function KeFetchUpJsonClient() {
+var generic_client_1 = require("./generic-client");
+__export(require("./generic-client"));
+var JsonAPIClient = /** @class */ (function (_super) {
+    __extends(JsonAPIClient, _super);
+    function JsonAPIClient() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    KeFetchUpJsonClient.prototype.request = function (url, fetchConfig, overrideDefaultConfig) {
+    JsonAPIClient.prototype.request = function (url, fetchConfig, overrideDefaultConfig) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -65,7 +69,7 @@ var KeFetchUpJsonClient = /** @class */ (function (_super) {
             });
         });
     };
-    return KeFetchUpJsonClient;
-}(client_1.GenericAPIClient));
-exports.default = KeFetchUpJsonClient;
-//# sourceMappingURL=kefetchup.js.map
+    return JsonAPIClient;
+}(generic_client_1.GenericAPIClient));
+exports.JsonAPIClient = JsonAPIClient;
+//# sourceMappingURL=clients.js.map

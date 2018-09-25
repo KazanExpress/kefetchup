@@ -59,47 +59,54 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-require("url-polyfill");
+function defaultFetch(url, options) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, new Response(JSON.stringify({ error: 'Response via default fetch handler' }), { status: 200 })];
+                case 1: return [2 /*return*/, _a.sent()];
+            }
+        });
+    });
+}
+exports.defaultFetch = defaultFetch;
 var GenericAPIClient = /** @class */ (function () {
-    function GenericAPIClient(baseURL, fetchHandler, clientConfig, errorHandler) {
+    function GenericAPIClient(baseURL, clientConfig, handlers) {
         if (baseURL === void 0) { baseURL = ''; }
-        if (fetchHandler === void 0) { fetchHandler = fetch; }
         this.baseURL = baseURL;
-        this.fetchHandler = fetchHandler;
         this.clientConfig = clientConfig;
-        this.errorHandler = errorHandler;
+        var defaultHandlers = {
+            fetchHandler: window.fetch || defaultFetch,
+            errorHandler: function (resp) {
+                throw new ResponseException(handleStatus(resp.status || -1), resp.status, resp);
+            },
+            responseHandler: function (resp) { return resp; }
+        };
+        this.handlers = handlers ? __assign({}, defaultHandlers, handlers) : defaultHandlers;
     }
-    GenericAPIClient.prototype.handleError = function (resp) {
-        if (this.errorHandler) {
-            this.errorHandler(resp);
-        }
-        else {
-            throw new ResponseException(ResponseErrors[resp.status].toString(), resp.status, resp);
-        }
-    };
     GenericAPIClient.prototype.request = function (url, fetchConfig, overrideDefaultConfig) {
         return __awaiter(this, void 0, void 0, function () {
-            var uri, response, e_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var response, _a, _b, e_1;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
-                        uri = typeof url === 'string' ? url : url.url;
-                        if (!uri.match(/^(\w+:)?\/\//)) {
-                            uri = new URL(this.baseURL, uri).href;
+                        if (!url.match(/^(\w+:)?\/\//)) {
+                            url = new URL(url, this.baseURL).href;
                         }
-                        _a.label = 1;
+                        _c.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.fetchHandler(new Request(uri, overrideDefaultConfig ? fetchConfig : __assign({}, this.clientConfig, fetchConfig)))];
+                        _c.trys.push([1, 3, , 4]);
+                        _b = (_a = this.handlers).responseHandler;
+                        return [4 /*yield*/, this.handlers.fetchHandler(url, overrideDefaultConfig ? fetchConfig : __assign({}, this.clientConfig, fetchConfig))];
                     case 2:
-                        response = _a.sent();
+                        response = _b.apply(_a, [_c.sent()]);
                         if (!response.ok) {
-                            this.handleError(response);
+                            return [2 /*return*/, this.handlers.errorHandler(response) || response];
                         }
                         return [2 /*return*/, response];
                     case 3:
-                        e_1 = _a.sent();
-                        throw new ResponseException(e_1, -1);
+                        e_1 = _c.sent();
+                        throw e_1;
                     case 4: return [2 /*return*/];
                 }
             });
@@ -112,13 +119,10 @@ var ResponseException = /** @class */ (function (_super) {
     __extends(ResponseException, _super);
     function ResponseException(message, status, data) {
         var _this = _super.call(this, message) || this;
-        _this.message = message;
         _this.status = status;
         _this.data = data;
         Object.setPrototypeOf(_this, ResponseException.prototype);
         _this.name = 'ResponseExcpetion';
-        _this.message = message;
-        _this.data = data;
         return _this;
     }
     ResponseException.prototype.toString = function () {
@@ -127,6 +131,10 @@ var ResponseException = /** @class */ (function (_super) {
     return ResponseException;
 }(Error));
 exports.ResponseException = ResponseException;
+function handleStatus(status) {
+    return ResponseErrors[status];
+}
+exports.handleStatus = handleStatus;
 var ResponseErrors;
 (function (ResponseErrors) {
     ResponseErrors[ResponseErrors["BadRequest"] = 400] = "BadRequest";
@@ -149,5 +157,6 @@ var ResponseErrors;
     ResponseErrors[ResponseErrors["BadGateway"] = 502] = "BadGateway";
     ResponseErrors[ResponseErrors["ServiceUnavailable"] = 503] = "ServiceUnavailable";
     ResponseErrors[ResponseErrors["GatewayTimeout"] = 504] = "GatewayTimeout";
+    ResponseErrors[ResponseErrors["UnknownError"] = -1] = "UnknownError";
 })(ResponseErrors = exports.ResponseErrors || (exports.ResponseErrors = {}));
-//# sourceMappingURL=client.js.map
+//# sourceMappingURL=generic-client.js.map
