@@ -44,7 +44,7 @@
       "tsx",
       "js"
     ],
-    "coverageReporters": ["icov"],
+    "coverageReporters": ["lcov"],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/",
