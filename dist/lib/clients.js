@@ -72,4 +72,23 @@ var JsonAPIClient = /** @class */ (function (_super) {
     return JsonAPIClient;
 }(generic_client_1.GenericAPIClient));
 exports.JsonAPIClient = JsonAPIClient;
+var TextAPIClient = /** @class */ (function (_super) {
+    __extends(TextAPIClient, _super);
+    function TextAPIClient() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    TextAPIClient.prototype.request = function (url, fetchConfig, overrideDefaultConfig) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, _super.prototype.request.call(this, url, fetchConfig, overrideDefaultConfig)];
+                    case 1: return [4 /*yield*/, (_a.sent()).text()];
+                    case 2: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    return TextAPIClient;
+}(generic_client_1.GenericAPIClient));
+exports.TextAPIClient = TextAPIClient;
 //# sourceMappingURL=clients.js.map

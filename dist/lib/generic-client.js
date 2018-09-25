@@ -63,7 +63,7 @@ function defaultFetch(url, options) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, new Response(JSON.stringify({ error: 'Response via default fetch handler' }), { status: 200 })];
+                case 0: return [4 /*yield*/, new Response(JSON.stringify({ error: 'Response via default fetch handler', to: url, options: options }), { status: 200 })];
                 case 1: return [2 /*return*/, _a.sent()];
             }
         });
@@ -78,7 +78,7 @@ var GenericAPIClient = /** @class */ (function () {
         var defaultHandlers = {
             fetchHandler: window.fetch || defaultFetch,
             errorHandler: function (resp) {
-                throw new ResponseException(handleStatus(resp.status || -1), resp.status, resp);
+                throw new ResponseException(handleStatus(resp.status), resp.status, resp);
             },
             responseHandler: function (resp) { return resp; }
         };
@@ -91,7 +91,7 @@ var GenericAPIClient = /** @class */ (function () {
                 switch (_c.label) {
                     case 0:
                         if (!url.match(/^(\w+:)?\/\//)) {
-                            url = new URL(url, this.baseURL).href;
+                            url = this.baseURL ? new URL(url, this.baseURL).href : url;
                         }
                         _c.label = 1;
                     case 1:
@@ -118,7 +118,7 @@ exports.GenericAPIClient = GenericAPIClient;
 var ResponseException = /** @class */ (function (_super) {
     __extends(ResponseException, _super);
     function ResponseException(message, status, data) {
-        var _this = _super.call(this, message) || this;
+        var _this = _super.call(this, message) /* istanbul ignore next: I DON'T KNOW WHY!!!!! */ || this;
         _this.status = status;
         _this.data = data;
         Object.setPrototypeOf(_this, ResponseException.prototype);
@@ -132,7 +132,8 @@ var ResponseException = /** @class */ (function (_super) {
 }(Error));
 exports.ResponseException = ResponseException;
 function handleStatus(status) {
-    return ResponseErrors[status];
+    if (status === void 0) { status = -1; }
+    return ResponseErrors[status] || ResponseErrors[-1];
 }
 exports.handleStatus = handleStatus;
 var ResponseErrors;
@@ -153,7 +154,7 @@ var ResponseErrors;
     ResponseErrors[ResponseErrors["Unprocessable"] = 422] = "Unprocessable";
     ResponseErrors[ResponseErrors["TooManyRequests"] = 429] = "TooManyRequests";
     ResponseErrors[ResponseErrors["ServerError"] = 500] = "ServerError";
-    ResponseErrors[ResponseErrors["NotImplemented"] = 500] = "NotImplemented";
+    ResponseErrors[ResponseErrors["NotImplemented"] = 501] = "NotImplemented";
     ResponseErrors[ResponseErrors["BadGateway"] = 502] = "BadGateway";
     ResponseErrors[ResponseErrors["ServiceUnavailable"] = 503] = "ServiceUnavailable";
     ResponseErrors[ResponseErrors["GatewayTimeout"] = 504] = "GatewayTimeout";
