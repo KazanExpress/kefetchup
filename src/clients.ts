@@ -7,3 +7,9 @@ export class JsonAPIClient extends GenericAPIClient {
     return await (await super.request(url, fetchConfig, overrideDefaultConfig)).json();
   }
 }
+
+export class TextAPIClient extends GenericAPIClient {
+  public async request(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<string> {
+    return await (await super.request(url, fetchConfig, overrideDefaultConfig)).text();
+  }
+}
