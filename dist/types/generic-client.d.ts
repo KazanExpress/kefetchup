@@ -8,11 +8,11 @@ declare type Optional<T> = {
 };
 export declare function defaultFetch(url: string, options?: RequestInit): Promise<Response>;
 export declare class GenericAPIClient {
-    private readonly baseURL;
-    private readonly clientConfig?;
-    private readonly handlers;
+    readonly baseURL: string;
+    readonly clientConfig?: RequestInit | undefined;
+    readonly handlers: APIClientHandlers;
     constructor(baseURL?: string, clientConfig?: RequestInit | undefined, handlers?: Optional<APIClientHandlers>);
-    request(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response>;
+    request(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response | any>;
 }
 export declare class ResponseException extends Error {
     status: ResponseErrors;
@@ -20,7 +20,7 @@ export declare class ResponseException extends Error {
     constructor(message: string, status: ResponseErrors, data?: Response | undefined);
     toString(): string;
 }
-export declare function handleStatus(status: number): string;
+export declare function handleStatus(status?: number): string;
 export declare enum ResponseErrors {
     BadRequest = 400,
     Unauthorized = 401,
@@ -38,7 +38,7 @@ export declare enum ResponseErrors {
     Unprocessable = 422,
     TooManyRequests = 429,
     ServerError = 500,
-    NotImplemented = 500,
+    NotImplemented = 501,
     BadGateway = 502,
     ServiceUnavailable = 503,
     GatewayTimeout = 504,
