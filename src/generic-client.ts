@@ -7,29 +7,29 @@ export type APIClientHandlers = {
 type Optional<T> = { [key in keyof T]?: T[key] };
 
 export async function defaultFetch(url: string, options?: RequestInit) {
-  return await new Response(JSON.stringify({ error: 'Response via default fetch handler' }), { status: 200 });
+  return await new Response(JSON.stringify({ error: 'Response via default fetch handler', to: url, options }), { status: 200 });
 }
 
 export class GenericAPIClient {
-  private readonly handlers: APIClientHandlers;
+  public readonly handlers: APIClientHandlers;
   constructor(
-    private readonly baseURL: string = '',
-    private readonly clientConfig?: RequestInit,
+    public readonly baseURL: string = '',
+    public readonly clientConfig?: RequestInit,
     handlers?: Optional<APIClientHandlers>
   ) {
     const defaultHandlers: APIClientHandlers = {
       fetchHandler: window.fetch || defaultFetch,
       errorHandler(resp) {
-        throw new ResponseException(handleStatus(resp.status || -1), resp.status, resp);
+        throw new ResponseException(handleStatus(resp.status), resp.status, resp);
       },
       responseHandler: resp => resp
     }
     this.handlers = handlers ? { ...defaultHandlers, ...handlers } : defaultHandlers;
   }
 
-  public async request(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response> {
+  public async request(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response|any> {
     if (!url.match(/^(\w+:)?\/\//)) {
-      url = new URL(url, this.baseURL).href
+      url = this.baseURL ? new URL(url, this.baseURL).href : url;
     }
     try {
       let response = this.handlers.responseHandler(await this.handlers.fetchHandler(url, overrideDefaultConfig ? fetchConfig : { ...this.clientConfig, ...fetchConfig }));
@@ -49,7 +49,7 @@ export class ResponseException extends Error {
     public status: ResponseErrors,
     public data?: Response
   ) {
-    super(message);
+    super(message)/* istanbul ignore next: I DON'T KNOW WHY!!!!! */;
     Object.setPrototypeOf(this, ResponseException.prototype);
     this.name = 'ResponseExcpetion';
   }
@@ -59,8 +59,8 @@ export class ResponseException extends Error {
   }
 }
 
-export function handleStatus(status: number): string {
-  return ResponseErrors[status];
+export function handleStatus(status: number = -1): string {
+  return ResponseErrors[status] || ResponseErrors[-1];
 }
 
 export enum ResponseErrors {
@@ -80,7 +80,7 @@ export enum ResponseErrors {
   Unprocessable = 422,
   TooManyRequests = 429,
   ServerError = 500,
-  NotImplemented = 500,
+  NotImplemented = 501,
   BadGateway = 502,
   ServiceUnavailable = 503,
   GatewayTimeout = 504,
