@@ -7,15 +7,6 @@ declare type Optional<T> = {
     [key in keyof T]?: T[key];
 };
 /**
- * Default fetch handler
- *
- * @export
- * @param {string} url
- * @param {RequestInit} [options]
- * @returns {Promise<Response>}
- */
-export declare function defaultFetch(url: string, options?: RequestInit): Promise<Response>;
-/**
  * Generic API client with default request
  *
  * @export
@@ -39,7 +30,7 @@ export declare class GenericAPIClient {
     /**
      * Fast alias method for request
      *
-     * @private
+     * @protected
      * @param {string} method HTTP method (GET, PUT, POST, etc)
      * @param {string} url Url to make request
      * @param {RequestInit} [fetchConfig] Default fetch config
@@ -47,7 +38,7 @@ export declare class GenericAPIClient {
      * @returns {(Promise<Response | any>)}
      * @memberof GenericAPIClient
      */
-    private alias;
+    protected alias(method: string, url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response | any>;
     get(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response | any>;
     put(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response | any>;
     post(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response | any>;

@@ -59,25 +59,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-/**
- * Default fetch handler
- *
- * @export
- * @param {string} url
- * @param {RequestInit} [options]
- * @returns {Promise<Response>}
- */
-function defaultFetch(url, options) {
-    return __awaiter(this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, new Response(JSON.stringify({ error: 'Response via default fetch handler', to: url, options: options }), { status: 200 })];
-                case 1: return [2 /*return*/, _a.sent()];
-            }
-        });
-    });
-}
-exports.defaultFetch = defaultFetch;
+var default_fetch_1 = require("./default-fetch");
 /**
  * Generic API client with default request
  *
@@ -90,7 +72,7 @@ var GenericAPIClient = /** @class */ (function () {
         this.baseURL = baseURL;
         this.clientConfig = clientConfig;
         var defaultHandlers = {
-            fetchHandler: window.fetch || defaultFetch,
+            fetchHandler: window.fetch || default_fetch_1.defaultFetch,
             errorHandler: function (resp) {
                 throw new ResponseException(handleStatus(resp.status), resp.status, resp);
             },
@@ -138,7 +120,7 @@ var GenericAPIClient = /** @class */ (function () {
     /**
      * Fast alias method for request
      *
-     * @private
+     * @protected
      * @param {string} method HTTP method (GET, PUT, POST, etc)
      * @param {string} url Url to make request
      * @param {RequestInit} [fetchConfig] Default fetch config

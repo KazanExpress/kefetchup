@@ -87,12 +87,22 @@
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, new Response(JSON.stringify({ error: 'Response via default fetch handler', to: url, options: options }), { status: 200 })];
+                    case 0: return [4 /*yield*/, new Response(JSON.stringify(defaultFetchHandlerResponseBody(url, options)), defaultFetchHandlerResponseOptions)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     }
+    var defaultFetchHandlerResponseBody = function (url, options) { return ({
+        error: 'Default fetch handler response.',
+        to: url,
+        options: options
+    }); };
+    var defaultFetchHandlerResponseOptions = {
+        status: 418,
+        statusText: '`fetch` missing in `window`'
+    };
+
     /**
      * Generic API client with default request
      *
@@ -153,7 +163,7 @@
         /**
          * Fast alias method for request
          *
-         * @private
+         * @protected
          * @param {string} method HTTP method (GET, PUT, POST, etc)
          * @param {string} url Url to make request
          * @param {RequestInit} [fetchConfig] Default fetch config
@@ -316,7 +326,6 @@
 
     exports.JsonAPIClient = JsonAPIClient;
     exports.TextAPIClient = TextAPIClient;
-    exports.defaultFetch = defaultFetch;
     exports.GenericAPIClient = GenericAPIClient;
     exports.ResponseException = ResponseException;
     exports.handleStatus = handleStatus;
