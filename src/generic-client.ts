@@ -1,3 +1,5 @@
+import { defaultFetch } from './default-fetch';
+
 export type APIClientHandlers = {
   fetchHandler: (url: string, options?: RequestInit) => Promise<Response>
   errorHandler: (error: Response) => Response | void
@@ -5,19 +7,6 @@ export type APIClientHandlers = {
 }
 
 type Optional<T> = { [key in keyof T]?: T[key] };
-
-/**
- * Default fetch handler
- *
- * @export
- * @param {string} url
- * @param {RequestInit} [options]
- * @returns {Promise<Response>}
- */
-export async function defaultFetch(url: string, options?: RequestInit): Promise<Response> {
-  return await new Response(JSON.stringify({ error: 'Response via default fetch handler', to: url, options }), { status: 200 });
-}
-
 /**
  * Generic API client with default request
  *
@@ -68,7 +57,7 @@ export class GenericAPIClient {
   /**
    * Fast alias method for request
    *
-   * @private
+   * @protected
    * @param {string} method HTTP method (GET, PUT, POST, etc)
    * @param {string} url Url to make request
    * @param {RequestInit} [fetchConfig] Default fetch config
@@ -76,7 +65,7 @@ export class GenericAPIClient {
    * @returns {(Promise<Response | any>)}
    * @memberof GenericAPIClient
    */
-  private async alias(method: string, url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response | any> {
+  protected async alias(method: string, url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response | any> {
     fetchConfig = fetchConfig || {};
     fetchConfig.method = method;
     return await this.request(url, fetchConfig, overrideDefaultConfig);
