@@ -59,6 +59,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Default fetch handler
+ *
+ * @export
+ * @param {string} url
+ * @param {RequestInit} [options]
+ * @returns {Promise<Response>}
+ */
 function defaultFetch(url, options) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -70,6 +78,12 @@ function defaultFetch(url, options) {
     });
 }
 exports.defaultFetch = defaultFetch;
+/**
+ * Generic API client with default request
+ *
+ * @export
+ * @class GenericAPIClient
+ */
 var GenericAPIClient = /** @class */ (function () {
     function GenericAPIClient(baseURL, clientConfig, handlers) {
         if (baseURL === void 0) { baseURL = ''; }
@@ -84,6 +98,15 @@ var GenericAPIClient = /** @class */ (function () {
         };
         this.handlers = handlers ? __assign({}, defaultHandlers, handlers) : defaultHandlers;
     }
+    /**
+     * Request method for making requests (duh)
+     *
+     * @param {string} url Url to make request
+     * @param {RequestInit} [fetchConfig] Default fetch config
+     * @param {boolean} [overrideDefaultConfig] Should override client base fetch config or not
+     * @returns {(Promise<Response | any>)}
+     * @memberof GenericAPIClient
+     */
     GenericAPIClient.prototype.request = function (url, fetchConfig, overrideDefaultConfig) {
         return __awaiter(this, void 0, void 0, function () {
             var response, _a, _b, e_1;
@@ -112,6 +135,80 @@ var GenericAPIClient = /** @class */ (function () {
             });
         });
     };
+    /**
+     * Fast alias method for request
+     *
+     * @private
+     * @param {string} method HTTP method (GET, PUT, POST, etc)
+     * @param {string} url Url to make request
+     * @param {RequestInit} [fetchConfig] Default fetch config
+     * @param {boolean} [overrideDefaultConfig] Should override client base fetch config or not
+     * @returns {(Promise<Response | any>)}
+     * @memberof GenericAPIClient
+     */
+    GenericAPIClient.prototype.alias = function (method, url, fetchConfig, overrideDefaultConfig) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        fetchConfig = fetchConfig || {};
+                        fetchConfig.method = method;
+                        return [4 /*yield*/, this.request(url, fetchConfig, overrideDefaultConfig)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    GenericAPIClient.prototype.get = function (url, fetchConfig, overrideDefaultConfig) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.alias('get', url, fetchConfig, overrideDefaultConfig)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    GenericAPIClient.prototype.put = function (url, fetchConfig, overrideDefaultConfig) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.alias('put', url, fetchConfig, overrideDefaultConfig)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    GenericAPIClient.prototype.post = function (url, fetchConfig, overrideDefaultConfig) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.alias('post', url, fetchConfig, overrideDefaultConfig)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    GenericAPIClient.prototype.patch = function (url, fetchConfig, overrideDefaultConfig) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.alias('patch', url, fetchConfig, overrideDefaultConfig)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    GenericAPIClient.prototype.delete = function (url, fetchConfig, overrideDefaultConfig) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.alias('delete', url, fetchConfig, overrideDefaultConfig)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
     return GenericAPIClient;
 }());
 exports.GenericAPIClient = GenericAPIClient;
@@ -131,6 +228,13 @@ var ResponseException = /** @class */ (function (_super) {
     return ResponseException;
 }(Error));
 exports.ResponseException = ResponseException;
+/**
+ * Retrieve string from response status
+ *
+ * @export
+ * @param {number} [status=-1] Response status (200, 404, 500, etc)
+ * @returns {string}
+ */
 function handleStatus(status) {
     if (status === void 0) { status = -1; }
     return ResponseErrors[status] || ResponseErrors[-1];
@@ -151,6 +255,7 @@ var ResponseErrors;
     ResponseErrors[ResponseErrors["Gone"] = 410] = "Gone";
     ResponseErrors[ResponseErrors["LengthRequired"] = 411] = "LengthRequired";
     ResponseErrors[ResponseErrors["InvalidMedia"] = 415] = "InvalidMedia";
+    ResponseErrors[ResponseErrors["I'm a teapot"] = 418] = "I'm a teapot";
     ResponseErrors[ResponseErrors["Unprocessable"] = 422] = "Unprocessable";
     ResponseErrors[ResponseErrors["TooManyRequests"] = 429] = "TooManyRequests";
     ResponseErrors[ResponseErrors["ServerError"] = 500] = "ServerError";

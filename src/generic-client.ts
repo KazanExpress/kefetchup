@@ -6,10 +6,24 @@ export type APIClientHandlers = {
 
 type Optional<T> = { [key in keyof T]?: T[key] };
 
-export async function defaultFetch(url: string, options?: RequestInit) {
+/**
+ * Default fetch handler
+ *
+ * @export
+ * @param {string} url
+ * @param {RequestInit} [options]
+ * @returns {Promise<Response>}
+ */
+export async function defaultFetch(url: string, options?: RequestInit): Promise<Response> {
   return await new Response(JSON.stringify({ error: 'Response via default fetch handler', to: url, options }), { status: 200 });
 }
 
+/**
+ * Generic API client with default request
+ *
+ * @export
+ * @class GenericAPIClient
+ */
 export class GenericAPIClient {
   public readonly handlers: APIClientHandlers;
   constructor(
@@ -27,7 +41,16 @@ export class GenericAPIClient {
     this.handlers = handlers ? { ...defaultHandlers, ...handlers } : defaultHandlers;
   }
 
-  public async request(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response|any> {
+  /**
+   * Request method for making requests (duh)
+   *
+   * @param {string} url Url to make request
+   * @param {RequestInit} [fetchConfig] Default fetch config
+   * @param {boolean} [overrideDefaultConfig] Should override client base fetch config or not
+   * @returns {(Promise<Response | any>)}
+   * @memberof GenericAPIClient
+   */
+  public async request(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response | any> {
     if (!url.match(/^(\w+:)?\/\//)) {
       url = this.baseURL ? new URL(url, this.baseURL).href : url;
     }
@@ -40,6 +63,43 @@ export class GenericAPIClient {
     } catch (e) {
       throw e;
     }
+  }
+
+  /**
+   * Fast alias method for request
+   *
+   * @private
+   * @param {string} method HTTP method (GET, PUT, POST, etc)
+   * @param {string} url Url to make request
+   * @param {RequestInit} [fetchConfig] Default fetch config
+   * @param {boolean} [overrideDefaultConfig] Should override client base fetch config or not
+   * @returns {(Promise<Response | any>)}
+   * @memberof GenericAPIClient
+   */
+  private async alias(method: string, url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response | any> {
+    fetchConfig = fetchConfig || {};
+    fetchConfig.method = method;
+    return await this.request(url, fetchConfig, overrideDefaultConfig);
+  }
+
+  public async get(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response | any> {
+    return await this.alias('get', url, fetchConfig, overrideDefaultConfig);
+  }
+
+  public async put(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response | any> {
+    return await this.alias('put', url, fetchConfig, overrideDefaultConfig);
+  }
+
+  public async post(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response | any> {
+    return await this.alias('post', url, fetchConfig, overrideDefaultConfig);
+  }
+
+  public async patch(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response | any> {
+    return await this.alias('patch', url, fetchConfig, overrideDefaultConfig);
+  }
+
+  public async delete(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<Response | any> {
+    return await this.alias('delete', url, fetchConfig, overrideDefaultConfig);
   }
 }
 
@@ -59,6 +119,13 @@ export class ResponseException extends Error {
   }
 }
 
+/**
+ * Retrieve string from response status
+ *
+ * @export
+ * @param {number} [status=-1] Response status (200, 404, 500, etc)
+ * @returns {string}
+ */
 export function handleStatus(status: number = -1): string {
   return ResponseErrors[status] || ResponseErrors[-1];
 }
