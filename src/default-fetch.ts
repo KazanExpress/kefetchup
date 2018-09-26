@@ -15,7 +15,8 @@ export async function defaultFetch(url: string, options?: RequestInit): Promise<
 
 export const defaultFetchHandlerResponseBody = (url: string, options?: RequestInit) => ({
   error: 'Default fetch handler response.',
-  to: url, options
+  to: url,
+  options
 });
 
 export const defaultFetchHandlerResponseOptions = {
