@@ -1,6 +1,6 @@
 {
   "name": "kefetchup",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple fetch client API to spice up your application",
   "keywords": [],
   "main": "dist/kefetchup.umd.js",
