@@ -150,21 +150,10 @@ describe('GenericAPIClient test', () => {
     } catch (e) {
       expect(e).toBeInstanceOf(ResponseException);
     }
-  })
+  });
 });
 
 describe('JsonAPIClient test', () => {
-  it('does request', async () => {
-    window.fetch = realFetch;
-    var API = new JsonAPIClient('https://jsonplaceholder.typicode.com/');
-    try {
-      let resp = await API.request('todos/1');
-      expect(!!resp).toBeTruthy();
-    } catch (e) {
-      console.log(e);
-    }
-  }, 15000);
-
   it('uses custom fetch handler', async () => {
     var API = new JsonAPIClient('https://google.com/api/', {}, { fetchHandler, errorHandler: (resp: Response) => resp });
     let resp = await API.request('other/api/route');
@@ -226,6 +215,43 @@ describe('JsonAPIClient test', () => {
   });
 });
 
+describe('Aliases test', () => {
+  it('sends get request', async () => {
+    var API = new JsonAPIClient('https://google.com/api/', {}, { fetchHandler, errorHandler: (resp: Response) => resp });
+    let resp = await API.get('other.io/route');
+    expect(resp).toHaveProperty('method');
+    expect(resp.method).toBe('get');
+  });
+
+  it('sends put request', async () => {
+    var API = new JsonAPIClient('https://google.com/api/', {}, { fetchHandler, errorHandler: (resp: Response) => resp });
+    let resp = await API.put('other.io/route');
+    expect(resp).toHaveProperty('method');
+    expect(resp.method).toBe('put');
+  });
+
+  it('sends post request', async () => {
+    var API = new JsonAPIClient('https://google.com/api/', {}, { fetchHandler, errorHandler: (resp: Response) => resp });
+    let resp = await API.post('other.io/route');
+    expect(resp).toHaveProperty('method');
+    expect(resp.method).toBe('post');
+  });
+
+  it('sends delete request', async () => {
+    var API = new JsonAPIClient('https://google.com/api/', {}, { fetchHandler, errorHandler: (resp: Response) => resp });
+    let resp = await API.delete('other.io/route');
+    expect(resp).toHaveProperty('method');
+    expect(resp.method).toBe('delete');
+  });
+
+  it('sends patch request', async () => {
+    var API = new JsonAPIClient('https://google.com/api/', {}, { fetchHandler, errorHandler: (resp: Response) => resp });
+    let resp = await API.patch('other.io/route');
+    expect(resp).toHaveProperty('method');
+    expect(resp.method).toBe('patch');
+  });
+});
+
 describe('TextAPIClient test', () => {
   it('uses default fetch handler and returns text', async () => {
     window.fetch = undefined;
@@ -234,4 +260,4 @@ describe('TextAPIClient test', () => {
     expect(typeof resp === 'string');
     expect(resp).toBe('{\"error\":\"Response via default fetch handler\",\"to\":\"https://google.com/api/other/api/route\",\"options\":{}}');
   });
-})
+});
