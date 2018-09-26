@@ -45,7 +45,8 @@
       "js"
     ],
     "coverageReporters": [
-      "lcov"
+      "lcov",
+      "text"
     ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
@@ -83,7 +84,5 @@
     "ts-node": "^6.0.0",
     "typescript": "^3.0.0"
   },
-  "dependencies": {
-    "url-polyfill": "^1.1.0"
-  }
+  "dependencies": {}
 }
