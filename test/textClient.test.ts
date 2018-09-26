@@ -1,6 +1,6 @@
 import 'isomorphic-fetch';
 import { TextAPIClient } from '../src';
-import { defaultFetchHandlerResponseBody } from '../src/common';
+import { defaultFetchHandlerResponseBody } from '../src/default-fetch';
 
 describe('TextAPIClient test', () => {
   it('uses default fetch handler and returns text', async () => {

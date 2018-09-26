@@ -1,6 +1,6 @@
 import { JsonAPIClient } from '../src';
 import { fetchHandler, errorHandler, responseHandler, headers } from './common';
-import { defaultFetchHandlerResponseBody } from '../src/common';
+import { defaultFetchHandlerResponseBody } from '../src/default-fetch';
 
 describe('JsonAPIClient test', () => {
   it('uses custom fetch handler', async () => {
