@@ -77,6 +77,7 @@ export enum ResponseErrors {
   Gone = 410,
   LengthRequired = 411,
   InvalidMedia = 415,
+  'I\'m a teapot' = 418,
   Unprocessable = 422,
   TooManyRequests = 429,
   ServerError = 500,
