@@ -37,8 +37,8 @@ export default [
     input,
     output: [
       { file: output('es5'), format: 'cjs', sourcemap: true, exports: 'named' },
-      { file: output('umd'), format: 'umd', sourcemap: true, name: 'bound', exports: 'named' },
-      { file: output('iife'), format: 'iife', sourcemap: true, name: 'bound', exports: 'named' },
+      { file: output('umd'), format: 'umd', sourcemap: true, name: 'kefetchup', exports: 'named' },
+      { file: output('iife'), format: 'iife', sourcemap: true, name: 'kefetchup', exports: 'named' },
     ],
     ...common('es5')
   },
