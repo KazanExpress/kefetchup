@@ -5,7 +5,9 @@ import { defaultFetchHandlerResponseBody } from '../src/default-fetch';
 describe('JsonAPIClient test', () => {
   it('uses custom fetch handler', async () => {
     var API = new JsonAPIClient('https://google.com/api/', {}, { fetchHandler, errorHandler: (resp: Response) => resp });
+
     let resp = await API.request('other/api/route');
+
     expect(resp).toHaveProperty('payload');
     expect(resp.payload).toHaveLength(4);
     expect(Array.isArray(resp.payload)).toBeTruthy();
@@ -14,6 +16,7 @@ describe('JsonAPIClient test', () => {
   it('does request with empty baseUrl', async () => {
     var API = new JsonAPIClient(undefined, {}, { fetchHandler, errorHandler: (resp: Response) => resp });
     let resp = await API.request('todos/1');
+
     expect(API.baseURL).toBe('');
     expect(resp).toHaveProperty('url');
     expect(resp.url).toBe('todos/1');
@@ -61,6 +64,7 @@ describe('JsonAPIClient test', () => {
 
   it('does request to an "outside" url', async () => {
     var API = new JsonAPIClient('https://google.com/api/', {}, { fetchHandler, errorHandler: (resp: Response) => resp });
+
     let resp = await API.request('https://other.io/api/route');
     expect(resp).toHaveProperty('url');
     expect(resp.url).toBe('https://other.io/api/route');

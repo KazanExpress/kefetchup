@@ -8,7 +8,9 @@ describe('TextAPIClient test', () => {
     const baseUrl = 'https://google.com/api/';
     const url = 'other/api/route';
 
-    const API = new TextAPIClient(baseUrl, {}, { errorHandler: (resp: Response) => resp });
+    const API = new TextAPIClient(baseUrl);
+    API.errorHandler = (resp: Response) => resp;
+
     const resp = await API.request(url);
 
     expect(typeof resp === 'string');
