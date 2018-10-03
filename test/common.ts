@@ -2,6 +2,7 @@ import 'isomorphic-fetch';
 import { GenericAPIClient } from '../src';
 
 export const realFetch = window.fetch;
+
 export const fetchHandler = (url: string | Request, fetchConfig: RequestInit = {}): Promise<Response> => {
   return new Promise((resolve, reject) => {
     resolve(new Response(JSON.stringify({
@@ -17,26 +18,6 @@ export const fetchHandler = (url: string | Request, fetchConfig: RequestInit = {
       status: 403
     }));
   });
-}
-
-export const fetchHandlerNoStatus = (url: string | Request, fetchConfig?: RequestInit): Promise<Response> => {
-  return new Promise((resolve, reject) => {
-    resolve(new Response(JSON.stringify({}), { status: undefined }));
-  })
-}
-
-export const responseHandler = (resp: Response): Response => {
-  const { status } = resp;
-  return new Response(JSON.stringify({ payload: 'MyCustomPayload' }), { status });
-}
-
-export const errorHandler = (resp: Response): Response | void => {
-  const { headers } = resp;
-  return new Response(JSON.stringify({ error: 'MyCustomError' }), { status: 500, statusText: 'my status text', headers })
-}
-
-export const headers = {
-  'Content-Type': 'application/json'
 }
 
 export class TestAPIClient extends GenericAPIClient {
