@@ -1,6 +1,5 @@
-import 'isomorphic-fetch';
 import { ResponseException } from '../../src';
-import { fetchHandler, TestAPIClient } from '../common';
+import { TestAPIClient } from '../common';
 
 const aliasTest = (alias: string) => async () => {
   const API = new TestAPIClient('https://google.com/api/');

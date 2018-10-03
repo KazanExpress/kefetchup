@@ -16,7 +16,7 @@ export class GenericAPIClient {
 
   private request(
     url: string,
-    fetchConfig: RequestInit = this.clientConfig,
+    fetchConfig: RequestInit,
     overrideDefaultConfig: boolean = false
   ): Promise<any> {
     if (!url.match(/^(\w+:)?\/\//)) {
@@ -60,18 +60,24 @@ export class GenericAPIClient {
    * Request method alias factory
    *
    * @protected
+   * @
    * @param {string} method HTTP method (GET, PUT, POST, etc) to alias
    * @returns an alias function for request
    * @memberof GenericAPIClient
    */
-  protected readonly alias = (method: string) => function (this: GenericAPIClient,
-    url: string,
-    fetchConfig?: RequestInit,
-    overrideDefaultConfig?: boolean
-  ): ReturnType<typeof this['request']> {
-    fetchConfig = fetchConfig || {};
-    fetchConfig.method = method || 'GET';
-    return this.request(url, fetchConfig, overrideDefaultConfig);
+  protected alias(method: string) {
+    return function (this: GenericAPIClient,
+      url: string,
+      fetchConfig: RequestInit = this.clientConfig,
+      overrideDefaultConfig?: boolean
+    ): ReturnType<typeof this['request']> {
+      console.log('HERE true', fetchConfig === this.clientConfig)
+      console.log('HERE false', fetchConfig !== this.clientConfig);
+
+      fetchConfig = fetchConfig;
+      fetchConfig.method = method ? method.toUpperCase() : (fetchConfig.method || 'GET').toUpperCase();
+      return this.request(url, fetchConfig, overrideDefaultConfig);
+    }
   }
 
   public readonly get = this.alias('get');

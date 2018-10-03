@@ -2,7 +2,7 @@ import 'isomorphic-fetch';
 import { GenericAPIClient } from '../src';
 
 export const realFetch = window.fetch;
-export const fetchHandler = (url: string | Request, fetchConfig: RequestInit = {}): Promise<Response | any> => {
+export const fetchHandler = (url: string | Request, fetchConfig: RequestInit = {}): Promise<Response> => {
   return new Promise((resolve, reject) => {
     resolve(new Response(JSON.stringify({
       method: fetchConfig.method || 'get',
@@ -19,7 +19,7 @@ export const fetchHandler = (url: string | Request, fetchConfig: RequestInit = {
   });
 }
 
-export const fetchHandlerNoStatus = (url: string | Request, fetchConfig?: RequestInit): Promise<Response | any> => {
+export const fetchHandlerNoStatus = (url: string | Request, fetchConfig?: RequestInit): Promise<Response> => {
   return new Promise((resolve, reject) => {
     resolve(new Response(JSON.stringify({}), { status: undefined }));
   })
@@ -44,6 +44,10 @@ export class TestAPIClient extends GenericAPIClient {
 
   protected responseHandler(r: Response) {
     return r.json();
+  }
+
+  protected errorHandler(e) {
+    return e.data;
   }
 
   public trace = this.alias('');
