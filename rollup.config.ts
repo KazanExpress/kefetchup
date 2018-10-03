@@ -44,7 +44,7 @@ export default [
   },
   {
     input,
-    output: { file: 'dist/kefetchup.es.js', format: 'es', sourcemap: true },
+    output: { file: output('es'), format: 'es', sourcemap: true },
     ...common('es6')
   }
 ];
