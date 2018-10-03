@@ -3,7 +3,7 @@ import { JsonAPIClient, TextAPIClient, GenericAPIClient, ResponseException } fro
 
 describe('GenericAPIClient', () => {
   it('allows handler overloads', async () => {
-    const clients = [new TestAPIClient(), new JsonAPIClient(), new TextAPIClient()];
+    const clients = [new TestAPIClient('', {}), new JsonAPIClient(), new TextAPIClient()];
 
     for (const client of clients) {
       client.fetchHandler = fetchHandler;
@@ -15,7 +15,7 @@ describe('GenericAPIClient', () => {
 
       try {
         // Should throw here sometimes
-        const result = await client.get('/test', { method: 'get' }, true);
+        const result = await client.get('https://sad', { method: 'get' }, true);
 
         if (typeof result === 'object') {
           expect(result).toMatchObject(await (await fetchHandler('/test')).json());

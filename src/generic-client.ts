@@ -71,9 +71,6 @@ export class GenericAPIClient {
       fetchConfig: RequestInit = this.clientConfig,
       overrideDefaultConfig?: boolean
     ): ReturnType<typeof this['request']> {
-      console.log('HERE true', fetchConfig === this.clientConfig)
-      console.log('HERE false', fetchConfig !== this.clientConfig);
-
       fetchConfig = fetchConfig;
       fetchConfig.method = method ? method.toUpperCase() : (fetchConfig.method || 'GET').toUpperCase();
       return this.request(url, fetchConfig, overrideDefaultConfig);

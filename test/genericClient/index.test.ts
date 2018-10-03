@@ -1,3 +1,4 @@
+import { defaultFetch } from '../../src/default-fetch';
 import { GenericAPIClient, ResponseException } from '../../src';
 import { fetchHandler } from '../common';
 
@@ -41,5 +42,10 @@ describe('GenericAPIClient', () => {
         }
       }
     }
+  });
+
+  it('falls back to defaultFetch', () => {
+    window.fetch = undefined;
+    expect(new GenericAPIClient().fetchHandler).toBe(defaultFetch);
   });
 });
