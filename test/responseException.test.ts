@@ -11,6 +11,6 @@ describe('ResponseException', () => {
     let e = new ResponseException('My error message', 403, new Response());
     expect(e).toHaveProperty('message');
     expect(e).toHaveProperty('name');
-    expect(e.toString()).toBe('ResponseExcpetion: My error message');
+    expect(e.toString()).toBe('ResponseException: My error message');
   });
 });

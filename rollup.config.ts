@@ -2,6 +2,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import typescript from 'rollup-plugin-typescript2';
+import { uglify } from 'rollup-plugin-uglify';
 import json from 'rollup-plugin-json';
 
 const input = `src/index.ts`;
@@ -20,12 +21,18 @@ const common = target => ({
       target
     } } }),
 
-    // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
-    commonjs(),
     // Allow node_modules resolution, so you can use 'external' to control
     // which external modules to include in the bundle
     // https://github.com/rollup/rollup-plugin-node-resolve#usage
-    resolve(),
+    resolve({
+      module: true,
+      jsnext: true
+    }),
+
+    // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
+    commonjs(),
+
+    uglify({}),
 
     // Resolve source maps to the original source
     sourceMaps()

@@ -1,5 +1,6 @@
 import { TestAPIClient, fetchHandler } from '../common';
-import { JsonAPIClient, TextAPIClient, GenericAPIClient, ResponseException } from '../../src';
+import { JsonAPIClient, TextAPIClient, GenericAPIClient } from '../../src';
+import { ResponseException } from '../../src/errors';
 
 describe('GenericAPIClient', () => {
   it('allows handler overloads', async () => {

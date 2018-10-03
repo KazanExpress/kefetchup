@@ -1,3 +1,5 @@
+import { ResponseErrors } from './errors';
+
 /**
  * Default fetch handler
  *
@@ -22,6 +24,6 @@ export const defaultFetchHandlerResponseBody = (url: string, options?: RequestIn
 });
 
 export const defaultFetchHandlerResponseOptions = {
-  status: 418,
+  status: ResponseErrors[`I'm a teapot`],
   statusText: '`fetch` missing in `window`'
 };

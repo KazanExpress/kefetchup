@@ -1,4 +1,5 @@
 import { defaultFetch } from './default-fetch';
+import { ResponseException, ResponseErrors } from './errors';
 
 /**
  * Generic API client with default request.
@@ -42,7 +43,8 @@ export class GenericAPIClient {
 
   /**
    * Processes the response before allowing to return its value from request function.
-   * Override this function to provide custom response interception
+   * Override this function to provide custom response interception.
+   * Keep in mind that this function does not have to return a promise.
    *
    * @protected
    * @param {Response} response the response returned from fetchHandler
@@ -53,7 +55,7 @@ export class GenericAPIClient {
     if (response.ok) {
       return response;
     } else {
-      throw new ResponseException(handleStatus(response.status), response.status, response);
+      throw new ResponseException(GenericAPIClient.handleStatus(response.status), response.status, response);
     }
   }
 
@@ -121,56 +123,26 @@ export class GenericAPIClient {
   public readonly post = this.alias('post');
   public readonly patch = this.alias('patch');
   public readonly delete = this.alias('delete');
-}
 
-export class ResponseException<T = Response> extends Error {
-  constructor(
-    message: string,
-    public status: ResponseErrors,
-    public data?: T
-  ) {
-    super(message)/* istanbul ignore next: I DON'T KNOW WHY!!!!! */;
-    Object.setPrototypeOf(this, ResponseException.prototype);
-    this.name = 'ResponseExcpetion';
+  /**
+   * Retrieves response status string in a readable format from a status number
+   *
+   * @param {number|string} [status=-1] Response status (200, 404, 500, etc)
+   * @returns {string} a status literal for logging
+   */
+  public static handleStatus(status?: number): string;
+
+  /**
+   * Retrieves response status number from a readable PascalCase string
+   *
+   * @param {number|string} [status=-1] Response status ("NotFound", "OK", "Unknown", etc)
+   * @returns {number} a status number for requests
+   */
+  public static handleStatus(status?: string): number;
+
+  public static handleStatus(status: number | string = -1) {
+    return ResponseErrors[status] || ResponseErrors[-1];
   }
-
-  toString() {
-    return this.name + ': ' + this.message;
-  }
 }
 
-/**
- * Retrieve string from response status
- *
- * @export
- * @param {number} [status=-1] Response status (200, 404, 500, etc)
- * @returns {string} a status literal for logging
- */
-export function handleStatus(status: number = -1) {
-  return ResponseErrors[status] || ResponseErrors[-1];
-}
-
-export enum ResponseErrors {
-  BadRequest = 400,
-  Unauthorized = 401,
-  PaymentRequired = 402,
-  Forbidden = 403,
-  NotFound = 404,
-  MethodNotAllowed = 405,
-  NotAcceptable = 406,
-  ProxyAuthenticationRequired = 407,
-  RequestTimeout = 408,
-  Conflict = 409,
-  Gone = 410,
-  LengthRequired = 411,
-  InvalidMedia = 415,
-  'I\'m a teapot' = 418,
-  Unprocessable = 422,
-  TooManyRequests = 429,
-  ServerError = 500,
-  NotImplemented = 501,
-  BadGateway = 502,
-  ServiceUnavailable = 503,
-  GatewayTimeout = 504,
-  UnknownError = -1
-}
+GenericAPIClient.handleStatus()
