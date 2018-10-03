@@ -1,10 +1,9 @@
 import 'isomorphic-fetch';
-import { JsonAPIClient, ResponseException } from '../../src';
-import { fetchHandler } from '../common';
+import { ResponseException } from '../../src';
+import { fetchHandler, TestAPIClient } from '../common';
 
 const aliasTest = (alias: string) => async () => {
-  const API = new JsonAPIClient('https://google.com/api/');
-  API.fetchHandler = fetchHandler;
+  const API = new TestAPIClient('https://google.com/api/');
 
   try {
     await API[alias]('other.io/route');
@@ -15,22 +14,25 @@ const aliasTest = (alias: string) => async () => {
       expect(resp).toHaveProperty('method');
       expect(resp.method).toBe(alias);
     } else {
+      // DISCLAIMER: this should never happen.
       expect(true).toBe(false);
       console.log('Wow, it came this far...');
     }
   }
 }
 
-describe('Aliases', () => {
-  const aliases = [
-    'get',
-    'put',
-    'post',
-    'delete',
-    'patch',
-  ];
+describe('GenericAPIClient', () => {
+  describe('Aliases', () => {
+    const aliases = [
+      'get',
+      'put',
+      'post',
+      'delete',
+      'patch',
+    ];
 
-  for (const alias of aliases) {
-    it(alias, aliasTest(alias));
-  }
+    for (const alias of aliases) {
+      it(alias, aliasTest(alias));
+    }
+  });
 });

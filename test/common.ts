@@ -1,4 +1,5 @@
 import 'isomorphic-fetch';
+import { GenericAPIClient } from '../src';
 
 export const realFetch = window.fetch;
 export const fetchHandler = (url: string | Request, fetchConfig: RequestInit = {}): Promise<Response | any> => {
@@ -36,4 +37,14 @@ export const errorHandler = (resp: Response): Response | void => {
 
 export const headers = {
   'Content-Type': 'application/json'
+}
+
+export class TestAPIClient extends GenericAPIClient {
+  public fetchHandler = fetchHandler;
+
+  protected responseHandler(r: Response) {
+    return r.json();
+  }
+
+  public trace = this.alias('');
 }

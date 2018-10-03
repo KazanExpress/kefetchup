@@ -8,20 +8,6 @@ import { defaultFetch } from './default-fetch';
  */
 export class GenericAPIClient {
   public fetchHandler = window.fetch || defaultFetch;
-  public responseHandler(response: Response): any {
-    if (response.ok) {
-      return response;
-    } else {
-      throw new ResponseException(handleStatus(response.status), response.status, response);
-    }
-  }
-
-  public errorHandler(e): any {
-    if (e instanceof ResponseException)
-      throw e;
-    else
-      throw new ResponseException('Unkown Error: ', ResponseErrors.UnknownError, e);
-  }
 
   constructor(
     public readonly baseURL: string = '',
@@ -42,6 +28,21 @@ export class GenericAPIClient {
       overrideDefaultConfig ? fetchConfig : { ...this.clientConfig, ...fetchConfig },
       this.fetchHandler
     );
+  }
+
+  protected responseHandler(response: Response): any {
+    if (response.ok) {
+      return response;
+    } else {
+      throw new ResponseException(handleStatus(response.status), response.status, response);
+    }
+  }
+
+  protected errorHandler(e): any {
+    if (e instanceof ResponseException)
+      throw e;
+    else
+      throw new ResponseException('Unkown Error: ', ResponseErrors.UnknownError, e);
   }
 
   protected requestFactory(
