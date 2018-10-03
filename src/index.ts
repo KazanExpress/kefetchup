@@ -1,6 +1,6 @@
-import { GenericAPIClient } from './generic-client';
+import { GenericAPIClient } from './genericClient';
 
-export * from './generic-client';
+export * from './genericClient';
 export * from './errors';
 
 /**

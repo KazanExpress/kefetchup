@@ -1,4 +1,4 @@
-import { defaultFetch } from './default-fetch';
+import { defaultFetch } from './defaultFetch';
 import { ResponseException, ResponseErrors } from './errors';
 
 /**
@@ -138,11 +138,9 @@ export class GenericAPIClient {
    * @param {number|string} [status=-1] Response status ("NotFound", "OK", "Unknown", etc)
    * @returns {number} a status number for requests
    */
-  public static handleStatus(status?: string): number;
+  public static handleStatus(status: string): number;
 
   public static handleStatus(status: number | string = -1) {
     return ResponseErrors[status] || ResponseErrors[-1];
   }
 }
-
-GenericAPIClient.handleStatus()

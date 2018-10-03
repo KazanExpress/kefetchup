@@ -1,4 +1,4 @@
-import { defaultFetch } from '../../src/default-fetch';
+import { defaultFetch } from '../../src/defaultFetch';
 import { GenericAPIClient, ResponseException } from '../../src';
 import { fetchHandler } from '../common';
 
