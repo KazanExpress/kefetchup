@@ -3,25 +3,21 @@ import { GenericAPIClient } from './generic-client';
 export * from './generic-client';
 
 export class JsonAPIClient extends GenericAPIClient {
-  protected requestFactory(url, config, requestFunction): Promise<unknown> {
-    return new Promise<unknown>((resolve, reject) => super
-      .requestFactory(url, config, requestFunction)
-      .then((r: Response) => resolve(r.json()))
-      .catch(reject)
+  public responseHandler(resp: Response) {
+    return new Promise((res, rej) => resp
+      .json()
+      .then(res)
+      .catch(rej)
     );
   }
 }
 
-declare const j: JsonAPIClient;
-
-j.
-
 export class TextAPIClient extends GenericAPIClient {
-  protected requestFactory(url, config, requestFunction): Promise<string> {
-    return new Promise<string>((resolve, reject) => super
-      .requestFactory(url, config, requestFunction)
-      .then((r: Response) => resolve(r.text()))
-      .catch(reject)
+  public responseHandler(resp: Response) {
+    return new Promise((res, rej) => resp
+      .text()
+      .then(res)
+      .catch(rej)
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'isomorphic-fetch';
 
 export const realFetch = window.fetch;
-export const fetchHandler = (url: string | Request, fetchConfig?: RequestInit): Promise<Response | any> => {
+export const fetchHandler = (url: string | Request, fetchConfig: RequestInit = {}): Promise<Response | any> => {
   return new Promise((resolve, reject) => {
     resolve(new Response(JSON.stringify({
       method: fetchConfig.method || 'get',

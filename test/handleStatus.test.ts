@@ -1,6 +1,6 @@
 import { handleStatus } from '../src';
 
-describe('handleStatus test', () => {
+describe('handleStatus', () => {
   it('handles known status', () => {
     let e = handleStatus(500);
     expect(e).toBe('ServerError');

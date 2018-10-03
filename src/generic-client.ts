@@ -8,22 +8,38 @@ import { defaultFetch } from './default-fetch';
  */
 export class GenericAPIClient {
   public fetchHandler = window.fetch || defaultFetch;
+  public responseHandler(response: Response): any {
+    if (response.ok) {
+      return response;
+    } else {
+      throw new ResponseException(handleStatus(response.status), response.status, response);
+    }
+  }
+
+  public errorHandler(e): any {
+    if (e instanceof ResponseException)
+      throw e;
+    else
+      throw new ResponseException('Unkown Error: ', ResponseErrors.UnknownError, e);
+  }
 
   constructor(
     public readonly baseURL: string = '',
     public readonly clientConfig: RequestInit = {}
   ) {}
 
-  protected request(url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean): Promise<any> {
+  private request(
+    url: string,
+    fetchConfig: RequestInit = this.clientConfig,
+    overrideDefaultConfig: boolean = false
+  ): Promise<any> {
     if (!url.match(/^(\w+:)?\/\//)) {
       url = this.baseURL ? new URL(url, this.baseURL).href : url;
     }
 
     return this.requestFactory(
       url,
-      overrideDefaultConfig
-        ? fetchConfig || this.clientConfig
-        : { ...this.clientConfig, ...fetchConfig },
+      overrideDefaultConfig ? fetchConfig : { ...this.clientConfig, ...fetchConfig },
       this.fetchHandler
     );
   }
@@ -33,18 +49,10 @@ export class GenericAPIClient {
     config: RequestInit,
     requestFunction: (url: string, config?: RequestInit) => Promise<Response>
   ): Promise<any> {
-    return new Promise<any>((resolve, reject) => requestFunction(url, config).then(r => {
-      if (r.ok) {
-        resolve(r);
-      } else {
-        reject(new ResponseException(handleStatus(r.status), r.status, r));
-      }
-    }).catch(e => {
-      if (e instanceof ResponseException)
-        throw e;
-      else
-        throw new ResponseException('Unkown Error: ', ResponseErrors.UnknownError, e);
-    }));
+    return new Promise<Response>((resolve, _) => requestFunction(url, config)
+      .then(r => resolve(this.responseHandler(r)))
+      .catch(this.errorHandler)
+    );
   }
 
   /**
@@ -72,11 +80,11 @@ export class GenericAPIClient {
   public readonly delete = this.alias('delete');
 }
 
-export class ResponseException extends Error {
+export class ResponseException<T = Response> extends Error {
   constructor(
     message: string,
     public status: ResponseErrors,
-    public data?: Response
+    public data?: T
   ) {
     super(message)/* istanbul ignore next: I DON'T KNOW WHY!!!!! */;
     Object.setPrototypeOf(this, ResponseException.prototype);

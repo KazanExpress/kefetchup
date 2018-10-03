@@ -14,9 +14,11 @@ export function defaultFetch(url: string, options?: RequestInit): Promise<Respon
 }
 
 export const defaultFetchHandlerResponseBody = (url: string, options?: RequestInit) => ({
-  error: 'Default fetch handler response.',
-  to: url,
-  options
+  error: 'Default-fetch-handler response.',
+
+  // Emulate a behaviour of JSON.stringify that does not enumerate undefined properties
+  ...(url === undefined ? {} : { to: url }),
+  ...(options === undefined ? {} : { options })
 });
 
 export const defaultFetchHandlerResponseOptions = {
