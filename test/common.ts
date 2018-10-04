@@ -1,7 +1,9 @@
 import 'isomorphic-fetch';
+import { GenericAPIClient } from '../src';
 
 export const realFetch = window.fetch;
-export const fetchHandler = (url: string | Request, fetchConfig?: RequestInit): Promise<Response | any> => {
+
+export const fetchHandler = (url: string | Request, fetchConfig: RequestInit = {}): Promise<Response> => {
   return new Promise((resolve, reject) => {
     resolve(new Response(JSON.stringify({
       method: fetchConfig.method || 'get',
@@ -18,22 +20,16 @@ export const fetchHandler = (url: string | Request, fetchConfig?: RequestInit): 
   });
 }
 
-export const fetchHandlerNoStatus = (url: string | Request, fetchConfig?: RequestInit): Promise<Response | any> => {
-  return new Promise((resolve, reject) => {
-    resolve(new Response(JSON.stringify({}), { status: undefined }));
-  })
-}
+export class TestAPIClient extends GenericAPIClient {
+  public fetchHandler = fetchHandler;
 
-export const responseHandler = (resp: Response): Response => {
-  const { status } = resp;
-  return new Response(JSON.stringify({ payload: 'MyCustomPayload' }), { status });
-}
+  protected responseHandler(r: Response) {
+    return r.json();
+  }
 
-export const errorHandler = (resp: Response): Response | void => {
-  const { headers } = resp;
-  return new Response(JSON.stringify({ error: 'MyCustomError' }), { status: 500, statusText: 'my status text', headers })
-}
+  protected errorHandler(e) {
+    return e.data;
+  }
 
-export const headers = {
-  'Content-Type': 'application/json'
+  public trace = this.alias('');
 }

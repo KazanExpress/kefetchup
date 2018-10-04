@@ -3,8 +3,9 @@
   "version": "1.0.2",
   "description": "Simple fetch client API to spice up your application",
   "keywords": [],
-  "main": "dist/kefetchup.umd.js",
-  "module": "dist/kefetchup.es5.js",
+  "main": "dist/kefetchup.es5.js",
+  "module": "dist/kefetchup.es.js",
+  "unpkg": "dist/kefetchup.iife.js",
   "typings": "dist/types/kefetchup.d.ts",
   "files": [
     "src",
@@ -80,6 +81,7 @@
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-typescript2": "^0.13.0",
+    "rollup-plugin-uglify": "^6.0.0",
     "ts-jest": "^22.0.0",
     "ts-node": "^6.0.0",
     "typescript": "^3.0.0"
