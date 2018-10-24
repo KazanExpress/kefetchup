@@ -10,3 +10,5 @@
 ## What is it?
 
 It's just a small and a very extendable fetch client made for our company's purposes.
+
+Feel free to use it.
