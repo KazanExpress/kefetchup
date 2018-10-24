@@ -8,7 +8,7 @@ import { ResponseException, ResponseErrors } from './errors';
  * Can be instantiated on its own for simple singular requests.
  */
 export class GenericAPIClient {
-  public fetchHandler = window.fetch || defaultFetch;
+  public fetchHandler = window.fetch ? window.fetch.bind(window) : defaultFetch;
 
   /**
    * Creates an instance of GenericAPIClient.
