@@ -1,6 +1,6 @@
 {
   "name": "kefetchup",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Simple fetch client API to spice up your application",
   "keywords": [],
   "main": "dist/lib/index.js",
