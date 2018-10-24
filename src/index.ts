@@ -8,7 +8,6 @@ export * from './errors';
  */
 export class JsonAPIClient extends GenericAPIClient {
   /**
-   * @override
    * @inheritdoc
    */
   responseHandler(resp: Response): Promise<unknown> {
@@ -21,7 +20,6 @@ export class JsonAPIClient extends GenericAPIClient {
  */
 export class TextAPIClient extends GenericAPIClient {
   /**
-   * @override
    * @inheritdoc
    */
   responseHandler(resp: Response) {
