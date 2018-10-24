@@ -9,4 +9,4 @@
 
 ## What is it?
 
-This is 
+It's just a small and a very extendable fetch client made for our company's purposes.
