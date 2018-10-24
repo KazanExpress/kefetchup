@@ -105,13 +105,13 @@
         /**
          * Creates an instance of GenericAPIClient.
          * @param {string} [baseURL=''] a base url to prepend to all request urls except for the ones with root urls
-         * @param {RequestInit} [clientConfig={}] a default config for requests
+         * @param {RequestInit} [baseClientConfig={}] a default config for requests
          */
-        function GenericAPIClient(baseURL, clientConfig) {
+        function GenericAPIClient(baseURL, baseClientConfig) {
             if (baseURL === void 0) { baseURL = ''; }
-            if (clientConfig === void 0) { clientConfig = {}; }
+            if (baseClientConfig === void 0) { baseClientConfig = {}; }
             this.baseURL = baseURL;
-            this.clientConfig = clientConfig;
+            this.baseClientConfig = baseClientConfig;
             this.fetchHandler = window.fetch ? window.fetch.bind(window) : defaultFetch;
             this.get = this.alias('get');
             this.put = this.alias('put');
@@ -129,7 +129,7 @@
             if (!url.match(/^(\w+:)?\/\//)) {
                 url = this.baseURL ? new URL(url, this.baseURL).href : url;
             }
-            return this.requestFactory(url, overrideDefaultConfig ? fetchConfig : __assign({}, this.clientConfig, fetchConfig), this.fetchHandler);
+            return this.requestFactory(url, overrideDefaultConfig ? fetchConfig : __assign({}, this.baseClientConfig, fetchConfig), this.fetchHandler);
         };
         /**
          * Processes the response before allowing to return its value from request function.
@@ -192,7 +192,7 @@
          */
         GenericAPIClient.prototype.alias = function (method) {
             return function (url, fetchConfig, overrideDefaultConfig) {
-                if (fetchConfig === void 0) { fetchConfig = this.clientConfig; }
+                if (fetchConfig === void 0) { fetchConfig = this.baseClientConfig; }
                 fetchConfig = fetchConfig;
                 fetchConfig.method = method ? method.toUpperCase() : (fetchConfig.method || 'GET').toUpperCase();
                 return this.request(url, fetchConfig, overrideDefaultConfig);

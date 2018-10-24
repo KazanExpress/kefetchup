@@ -6,14 +6,14 @@
  */
 export declare class GenericAPIClient {
     readonly baseURL: string;
-    readonly clientConfig: RequestInit;
+    readonly baseClientConfig: RequestInit;
     fetchHandler: any;
     /**
      * Creates an instance of GenericAPIClient.
      * @param {string} [baseURL=''] a base url to prepend to all request urls except for the ones with root urls
-     * @param {RequestInit} [clientConfig={}] a default config for requests
+     * @param {RequestInit} [baseClientConfig={}] a default config for requests
      */
-    constructor(baseURL?: string, clientConfig?: RequestInit);
+    constructor(baseURL?: string, baseClientConfig?: RequestInit);
     /**
      * Makes requests using request factory and resolves config merge conflicts.
      *
