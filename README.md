@@ -88,3 +88,13 @@ class MyApiClient extends GenericAPIClient {
   }
 }
 ```
+
+And then just
+
+```js
+const myApi = new MyApiClient();
+
+myApi.getImportantThingsList().then(things => {
+  // do things with your important things...
+});
+```
