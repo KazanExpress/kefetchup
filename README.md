@@ -9,7 +9,7 @@
 
 ## What is it?
 
-It's just a small and very extendable fetch client made for our company's purposes.
+It's just a small and very extendable [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) client made for our company's purposes.
 
 Kefetchup aims to help you move your API calls into a higher generic abstraction by providing necessary tools for it.
 
