@@ -22,7 +22,7 @@ import {
   // A generic wrap around fetch to provide rich customization and exception handling. 
   // Outputs a standard fetch response for each request.
   GenericAPIClient,
-                
+
   // A simple class that extends GenericAPIClient.
   // The only difference is that it returns straight parsed JSON object, instead of a fetch response.
   JsonAPIClient,
@@ -46,7 +46,7 @@ You'll be fine extending `JsonAPIClient` in most cases. Though, for finer contro
 A typical usage example is as follows (using `GenericAPIClient`, for example):
 
 ```js
-import { GenericAPIClient } from 'kefetchup'
+import { GenericAPIClient, ResponseException, ResponseErrors, withQuery } from 'kefetchup'
 
 class MyApiClient extends GenericAPIClient {
 
@@ -57,6 +57,12 @@ class MyApiClient extends GenericAPIClient {
    * @param resp {Response} a standard fetch response: https://developer.mozilla.org/en-US/docs/Web/API/Response
    */
   responseHandler(resp) {
+
+    // Let's say we want to throw errors for 400+ statuses too
+    if (resp.status >= 400) {
+      throw new ResponseException(ResponseErrors[resp.status], resp.status, resp);
+    }
+
     return resp.json();
   }
 
