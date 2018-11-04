@@ -13,11 +13,11 @@ export class GenericAPIClient {
   /**
    * Creates an instance of GenericAPIClient.
    * @param {string} [baseURL=''] a base url to prepend to all request urls except for the ones with root urls
-   * @param {RequestInit} [clientConfig={}] a default config for requests
+   * @param {RequestInit} [baseClientConfig={}] a default config for requests
    */
   constructor(
     public readonly baseURL: string = '',
-    public readonly clientConfig: RequestInit = {}
+    public readonly baseClientConfig: RequestInit = {}
   ) {}
 
   /**
@@ -39,10 +39,10 @@ export class GenericAPIClient {
       overrideDefaultConfig ?
         fetchConfig :
         {
-          ...this.clientConfig,
+          ...this.baseClientConfig,
           ...fetchConfig,
           headers: {
-            ...(this.clientConfig.headers || {}), ...(fetchConfig.headers || {})
+            ...(this.baseClientConfig.headers || {}), ...(fetchConfig.headers || {})
           }
         },
       this.fetchHandler
@@ -117,7 +117,7 @@ export class GenericAPIClient {
   protected alias(method: string) {
     return function (this: GenericAPIClient,
       url: string,
-      fetchConfig: RequestInit = this.clientConfig,
+      fetchConfig: RequestInit = this.baseClientConfig,
       overrideDefaultConfig?: boolean
     ): ReturnType<typeof this['request']> {
       fetchConfig = fetchConfig;
