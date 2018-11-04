@@ -36,7 +36,15 @@ export class GenericAPIClient {
 
     return this.requestFactory(
       url,
-      overrideDefaultConfig ? fetchConfig : { ...this.clientConfig, ...fetchConfig },
+      overrideDefaultConfig ?
+        fetchConfig :
+        {
+          ...this.clientConfig,
+          ...fetchConfig,
+          headers: {
+            ...(this.clientConfig.headers || {}), ...(fetchConfig.headers || {})
+          }
+        },
       this.fetchHandler
     );
   }
