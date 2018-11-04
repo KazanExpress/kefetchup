@@ -21,7 +21,7 @@ export function withQuery<T extends object>(url: string, queryParams: T) {
     })
     .join('&');
 
-  const prefix = (url.indexOf('?') > -1 ? '?' : '&');
+  const prefix = (url.indexOf('?') > -1 ? '&' : '?');
 
   return url + (queryStr.length > 0 ? prefix + queryStr : '');
 }
