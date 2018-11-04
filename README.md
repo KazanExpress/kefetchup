@@ -63,7 +63,7 @@ class MyApiClient extends GenericAPIClient {
       throw new ResponseException(ResponseErrors[resp.status], resp.status, resp);
     }
 
-    return resp.json();
+    return await resp.json();
   }
 
   constructor(myVeryImportantSetting) {
@@ -85,12 +85,25 @@ class MyApiClient extends GenericAPIClient {
   }
 
   // In class' body we can write custom method handlers for our API calls
-  getImportantThingsList() {
-    // Send a GET request to 'https://my-api-server.com/api/important-things?importance=high&amount=5'
-    return this.get(withQuery('/important-things', {
-      importance: 'high',
-      amount: 5
-    }));
+  async getImportantThingsList() {
+    try {
+      // Send a GET request to 'https://my-api-server.com/api/important-things?importance=high&amount=5'
+      return await this.get(withQuery('/important-things', {
+        importance: 'high',
+        amount: 5
+      }));
+    } catch (e) {
+      // e instanceof ResponseException === true
+      // Here you can handle method-specific errors
+
+      if (e.status === 401) {
+        console.error('Token is incorrect for', e.data);
+
+        return [];
+      } else {
+        throw e;
+      }
+    }
   }
 }
 ```
