@@ -6,7 +6,7 @@
  * @returns url with encoded params
  */
 export function withQuery<T extends object>(url: string, queryParams: T) {
-  const encodeQuery = (value, key) => value !== undefined ? `${encodeURIComponent(key)}[]=${encodeURIComponent(value)}` : ''
+  const encodeQuery = (value, key) => value !== undefined ? `${encodeURIComponent(key)}=${encodeURIComponent(value)}` : ''
 
   const queryStr = Object.keys(queryParams)
     .filter(k => !!k)
