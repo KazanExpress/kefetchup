@@ -47,7 +47,8 @@ var GenericAPIClient = /** @class */ (function () {
         if (!url.match(/^(\w+:)?\/\//)) {
             url = this.baseURL ? new URL(url, this.baseURL).href : url;
         }
-        return this.requestFactory(url, overrideDefaultConfig ? fetchConfig : __assign({}, this.baseClientConfig, fetchConfig), this.fetchHandler);
+        return this.requestFactory(url, overrideDefaultConfig ?
+            fetchConfig : __assign({}, this.baseClientConfig, fetchConfig, { headers: __assign({}, (this.baseClientConfig.headers || {}), (fetchConfig.headers || {})) }), this.fetchHandler);
     };
     /**
      * Processes the response before allowing to return its value from request function.

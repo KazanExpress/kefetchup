@@ -19,6 +19,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var genericClient_1 = require("./genericClient");
 __export(require("./genericClient"));
 __export(require("./errors"));
+__export(require("./util"));
 /**
  * @inheritdoc
  */
