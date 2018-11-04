@@ -6,18 +6,16 @@
  * @returns url with encoded params
  */
 export function withQuery<T extends object>(url: string, queryParams: T) {
-  const encodeQuery = (value, key) => value !== undefined ? `${encodeURIComponent(key)}=${encodeURIComponent(value)}` : ''
+  const encodeQuery = (value, key) => `${encodeURIComponent(key)}=${encodeURI(value)}`;
 
   const queryArr = Object.keys(queryParams)
-    .filter(k => !!k)
+    .filter(k => !!k && queryParams[k] !== undefined)
     .map((k: any) => {
       if (Array.isArray(queryParams[k])) {
-        return queryParams[k]
-          .map(v => encodeQuery(v, k))
-          .join('&')
+        return encodeQuery(queryParams[k].join(','), k);
       }
 
-      return encodeQuery(queryParams[k], k)
+      return encodeQuery(queryParams[k], k);
     });
 
   const queryStr = queryArr.length !== 1 ? queryArr.join('&') : queryArr[0];

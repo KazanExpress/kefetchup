@@ -5,7 +5,8 @@ describe('withQuery', () => {
     const url = 'url';
     expect(withQuery(url, {
       test: 'testarg',
+      tests: ['test1', 'test2'],
       none: undefined
-    })).toBe(url + '?test=testarg')
+    })).toBe(url + '?test=testarg&tests=test1,test2')
   });
 });
