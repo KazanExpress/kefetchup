@@ -8,7 +8,7 @@
 export function withQuery<T extends object>(url: string, queryParams: T) {
   const encodeQuery = (value, key) => value !== undefined ? `${encodeURIComponent(key)}=${encodeURIComponent(value)}` : ''
 
-  const queryStr = Object.keys(queryParams)
+  const queryArr = Object.keys(queryParams)
     .filter(k => !!k)
     .map((k: any) => {
       if (Array.isArray(queryParams[k])) {
@@ -18,8 +18,9 @@ export function withQuery<T extends object>(url: string, queryParams: T) {
       }
 
       return encodeQuery(queryParams[k], k)
-    })
-    .join('&');
+    });
+
+  const queryStr = queryArr.length !== 1 ? queryArr.join('&') : queryArr[0];
 
   const prefix = (url.indexOf('?') > -1 ? '&' : '?');
 
