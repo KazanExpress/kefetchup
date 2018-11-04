@@ -2,6 +2,7 @@ import { GenericAPIClient } from './genericClient';
 
 export * from './genericClient';
 export * from './errors';
+export * from './util';
 
 /**
  * @inheritdoc
