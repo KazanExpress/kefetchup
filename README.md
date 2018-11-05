@@ -56,7 +56,14 @@ class MyApiClient extends GenericAPIClient {
    * 
    * @param resp {Response} a standard fetch response: https://developer.mozilla.org/en-US/docs/Web/API/Response
    */
-  responseHandler(resp) {
+  async responseHandler(response) {
+    const resp = super.responseHandler(response);
+
+    // Let's say we want to throw errors for 400+ statuses too
+    if (resp.status >= 400) {
+      throw new ResponseException(ResponseErrors[resp.status], resp.status, resp);
+    }
+
     return resp.json();
   }
 
@@ -79,12 +86,25 @@ class MyApiClient extends GenericAPIClient {
   }
 
   // In class' body we can write custom method handlers for our API calls
-  getImportantThingsList() {
-    // Send a GET request to 'https://my-api-server.com/api/important-things?importance=high&amount=5'
-    return this.get(withQuery('/important-things', {
-      importance: 'high',
-      amount: 5
-    }));
+  async getImportantThingsList() {
+    try {
+      // Send a GET request to 'https://my-api-server.com/api/important-things?importance=high&amount=5'
+      return await this.get(withQuery('/important-things', {
+        importance: 'high',
+        amount: 5
+      }));
+    } catch (e) {
+      // e instanceof ResponseException === true
+      // Here you can handle method-specific errors
+
+      if (e.status === 401) {
+        console.error('Token is incorrect for', e.data);
+
+        return [];
+      } else {
+        throw e;
+      }
+    }
   }
 }
 ```
