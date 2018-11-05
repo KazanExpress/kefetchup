@@ -95,9 +95,9 @@ var GenericAPIClient = /** @class */ (function () {
      */
     GenericAPIClient.prototype.requestFactory = function (url, config, requestFunction) {
         var _this = this;
-        return new Promise(function (resolve, _) { return requestFunction(url, config)
-            .then(function (r) { return resolve(_this.responseHandler(r)); })
-            .catch(_this.errorHandler); });
+        return requestFunction(url, config)
+            .then(function (r) { return _this.responseHandler(r); })
+            .catch(function (e) { return _this.errorHandler(e); });
     };
     /**
      * Request method alias factory.

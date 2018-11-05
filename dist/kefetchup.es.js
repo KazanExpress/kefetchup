@@ -131,9 +131,9 @@ class GenericAPIClient {
      * @param requestFunction
      */
     requestFactory(url, config, requestFunction) {
-        return new Promise((resolve, _) => requestFunction(url, config)
-            .then(r => resolve(this.responseHandler(r)))
-            .catch(this.errorHandler));
+        return requestFunction(url, config)
+            .then(r => this.responseHandler(r))
+            .catch(e => this.errorHandler(e));
     }
     /**
      * Request method alias factory.
