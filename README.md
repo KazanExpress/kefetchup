@@ -9,7 +9,7 @@
 
 ## What is it?
 
-It's just a small and very extendable fetch client made for our company's purposes.
+It's just a small and very extendable [fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) client made for our company's purposes.
 
 Kefetchup aims to help you move your API calls into a higher generic abstraction by providing necessary tools for it.
 
@@ -22,7 +22,7 @@ import {
   // A generic wrap around fetch to provide rich customization and exception handling. 
   // Outputs a standard fetch response for each request.
   GenericAPIClient,
-                
+
   // A simple class that extends GenericAPIClient.
   // The only difference is that it returns straight parsed JSON object, instead of a fetch response.
   JsonAPIClient,
@@ -46,7 +46,7 @@ You'll be fine extending `JsonAPIClient` in most cases. Though, for finer contro
 A typical usage example is as follows (using `GenericAPIClient`, for example):
 
 ```js
-import { GenericAPIClient } from 'kefetchup'
+import { GenericAPIClient, ResponseException, ResponseErrors, withQuery } from 'kefetchup'
 
 class MyApiClient extends GenericAPIClient {
 
@@ -64,7 +64,7 @@ class MyApiClient extends GenericAPIClient {
       throw new ResponseException(ResponseErrors[resp.status], resp.status, resp);
     }
 
-    return resp.json();
+    return await resp.json();
   }
 
   constructor(myVeryImportantSetting) {

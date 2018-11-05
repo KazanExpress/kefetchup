@@ -84,7 +84,8 @@ class GenericAPIClient {
         if (!url.match(/^(\w+:)?\/\//)) {
             url = this.baseURL ? new URL(url, this.baseURL).href : url;
         }
-        return this.requestFactory(url, overrideDefaultConfig ? fetchConfig : Object.assign({}, this.baseClientConfig, fetchConfig), this.fetchHandler);
+        return this.requestFactory(url, overrideDefaultConfig ?
+            fetchConfig : Object.assign({}, this.baseClientConfig, fetchConfig, { headers: Object.assign({}, (this.baseClientConfig.headers || {}), (fetchConfig.headers || {})) }), this.fetchHandler);
     }
     /**
      * Processes the response before allowing to return its value from request function.
@@ -157,6 +158,38 @@ class GenericAPIClient {
 }
 
 /**
+ * Encode an object into the plain URL as url-query-string
+ *
+ * ```js
+withQuery('/list', {
+  amount: 5,
+  filters: ['price', 'date']
+})```
+ *
+ * returns
+ * ```js
+'/list?amount=5&filters=price,date'```
+ *
+ * @param {String} url a url to encode params into
+ * @param {Object} queryParams query params in object form
+ * @returns url with encoded params
+ */
+function withQuery(url, queryParams) {
+    const encodeQuery = (value, key) => `${encodeURIComponent(key)}=${encodeURI(value)}`;
+    const queryArr = Object.keys(queryParams)
+        .filter(k => !!k && queryParams[k] !== undefined)
+        .map((k) => {
+        if (Array.isArray(queryParams[k])) {
+            return encodeQuery(queryParams[k].join(','), k);
+        }
+        return encodeQuery(queryParams[k], k);
+    });
+    const queryStr = queryArr.length !== 1 ? queryArr.join('&') : queryArr[0];
+    const prefix = (url.indexOf('?') > -1 ? '&' : '?');
+    return url + (queryStr.length > 0 ? prefix + queryStr : '');
+}
+
+/**
  * @inheritdoc
  */
 class JsonAPIClient extends GenericAPIClient {
@@ -179,5 +212,5 @@ class TextAPIClient extends GenericAPIClient {
     }
 }
 
-export { JsonAPIClient, TextAPIClient, GenericAPIClient, ResponseException, ResponseErrors };
+export { JsonAPIClient, TextAPIClient, GenericAPIClient, ResponseException, ResponseErrors, withQuery };
 //# sourceMappingURL=kefetchup.es.js.map
