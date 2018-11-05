@@ -98,10 +98,9 @@ export class GenericAPIClient {
     config: RequestInit,
     requestFunction: (url: string, config?: RequestInit) => Promise<Response>
   ): Promise<any> {
-    return new Promise<Response>((resolve, _) => requestFunction(url, config)
-      .then(r => resolve(this.responseHandler(r)))
-      .catch(this.errorHandler)
-    );
+    return requestFunction(url, config)
+      .then(r => this.responseHandler(r))
+      .catch(e => this.errorHandler(e));
   }
 
   /**

@@ -56,7 +56,8 @@ class MyApiClient extends GenericAPIClient {
    * 
    * @param resp {Response} a standard fetch response: https://developer.mozilla.org/en-US/docs/Web/API/Response
    */
-  responseHandler(resp) {
+  async responseHandler(response) {
+    const resp = super.responseHandler(response);
 
     // Let's say we want to throw errors for 400+ statuses too
     if (resp.status >= 400) {
@@ -115,5 +116,7 @@ const myApi = new MyApiClient();
 
 myApi.getImportantThingsList().then(things => {
   // do things with your important things...
+}).catch(e => {
+  // and catch your errors properly...
 });
 ```
