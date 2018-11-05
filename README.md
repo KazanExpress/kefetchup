@@ -43,10 +43,12 @@ import {
 
 You'll be fine extending `JsonAPIClient` in most cases. Though, for finer control we recommend using `GenericAPIClient`.
 
-A typical usage example is as follows (using `GenericAPIClient`, for example):
+<details><summary>Usage example</summary>
+
+A typical usage example is as follows (using `GenericAPIClient`):
 
 ```js
-import { GenericAPIClient, ResponseException, ResponseErrors, withQuery } from 'kefetchup'
+import { GenericAPIClient, ResponseException, withQuery } from 'kefetchup'
 
 class MyApiClient extends GenericAPIClient {
 
@@ -61,7 +63,7 @@ class MyApiClient extends GenericAPIClient {
 
     // Let's say we want to throw errors for 400+ statuses too
     if (resp.status >= 400) {
-      throw new ResponseException(ResponseErrors[resp.status], resp.status, resp);
+      throw new ResponseException(MyApiClient.handleStatus(resp.status), resp.status, resp);
     }
 
     return await resp.json();
@@ -88,10 +90,11 @@ class MyApiClient extends GenericAPIClient {
   // In class' body we can write custom method handlers for our API calls
   async getImportantThingsList() {
     try {
-      // Send a GET request to 'https://my-api-server.com/api/important-things?importance=high&amount=5'
+      // Send a GET request to 'https://my-api-server.com/api/important-things?importance=high&amount=5&type={value-of-myVeryImportantSetting}'
       return await this.get(withQuery('/important-things', {
         importance: 'high',
-        amount: 5
+        amount: 5,
+        type: this.myVeryImportantSetting
       }));
     } catch (e) {
       // e instanceof ResponseException === true
@@ -120,3 +123,5 @@ myApi.getImportantThingsList().then(things => {
   // and catch your errors properly...
 });
 ```
+
+</details>
