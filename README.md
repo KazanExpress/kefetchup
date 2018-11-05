@@ -116,5 +116,7 @@ const myApi = new MyApiClient();
 
 myApi.getImportantThingsList().then(things => {
   // do things with your important things...
+}).catch(e => {
+  // and catch your errors properly...
 });
 ```
