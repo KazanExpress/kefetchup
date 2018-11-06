@@ -31,7 +31,7 @@ import {
   TextAPIClient,
 
   // An exception class to use in your error handlers for server-returned errors. Provides statuses and stack traces.
-  ResponseException,
+  ResponseError,
 
   // A comprehensive list of all possible HTTP errors.
   ResponseErrors,
@@ -48,7 +48,7 @@ You'll be fine extending `JsonAPIClient` in most cases. Though, for finer contro
 A typical usage example is as follows (using `GenericAPIClient`):
 
 ```js
-import { GenericAPIClient, ResponseException, withQuery } from 'kefetchup'
+import { GenericAPIClient, ResponseError, withQuery } from 'kefetchup'
 
 class MyApiClient extends GenericAPIClient {
 
@@ -63,7 +63,7 @@ class MyApiClient extends GenericAPIClient {
 
     // Let's say we want to throw errors for 400+ statuses too
     if (resp.status >= 400) {
-      throw new ResponseException(MyApiClient.handleStatus(resp.status), resp.status, resp);
+      throw new ResponseError(MyApiClient.handleStatus(resp.status), resp.status, resp);
     }
 
     return await resp.json();
@@ -97,7 +97,7 @@ class MyApiClient extends GenericAPIClient {
         type: this.myVeryImportantSetting
       }));
     } catch (e) {
-      // e instanceof ResponseException === true
+      // e instanceof ResponseError === true
       // Here you can handle method-specific errors
 
       if (e.status === 401) {

@@ -16,7 +16,7 @@ export class ResponseError<T = Response> extends Error {
 
 /**
  * @deprecated use ResponseError instead
- */
+ *//* istanbul ignore next */
 export class ResponseException<T = Response> extends ResponseError<T> {
   constructor(message: string, status: ResponseErrors, data?: T) {
     super(message, status, data);

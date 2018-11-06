@@ -1,4 +1,4 @@
-import { ResponseException } from '../../src';
+import { ResponseError } from '../../src';
 import { TestAPIClient } from '../common';
 
 const aliasTest = (alias: string) => async () => {
@@ -7,8 +7,8 @@ const aliasTest = (alias: string) => async () => {
   try {
     await API[alias]('other.io/route');
   } catch (e) {
-    expect(e).toBeInstanceOf(ResponseException);
-    if (e instanceof ResponseException) {
+    expect(e).toBeInstanceOf(ResponseError);
+    if (e instanceof ResponseError) {
       const resp = e.data;
       expect(resp).toHaveProperty('method');
       expect(resp.method).toBe(alias);
