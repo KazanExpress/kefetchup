@@ -1,11 +1,11 @@
-export class ResponseException<T = Response> extends Error {
+export class ResponseError<T = Response> extends Error {
   constructor(
     message: string,
     public status: ResponseErrors,
     public data?: T
   ) {
     super(message)/* istanbul ignore next: because stupid typescript */;
-    Object.setPrototypeOf(this, ResponseException.prototype);
+    Object.setPrototypeOf(this, ResponseError.prototype);
     this.name = 'ResponseException';
   }
 

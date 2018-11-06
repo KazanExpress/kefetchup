@@ -8,6 +8,7 @@
     "strict": true,
     "sourceMap": true,
     "declaration": true,
+    "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
