@@ -1,5 +1,5 @@
 import { defaultFetch } from '../../src/defaultFetch';
-import { GenericAPIClient, ResponseException } from '../../src';
+import { GenericAPIClient, ResponseError } from '../../src';
 import { fetchHandler } from '../common';
 
 describe('GenericAPIClient', () => {
@@ -18,17 +18,17 @@ describe('GenericAPIClient', () => {
       // DISCLAIMER: this should never happen.
       expect(true).toBe(false);
     } catch (e) {
-      expect(e).toBeInstanceOf(ResponseException);
+      expect(e).toBeInstanceOf(ResponseError);
       expect(e.data).toMatchObject({});
     }
 
-    const errors = [new Error('asd'), 'string', 1, undefined, null, {}, new ResponseException('test', 201, null)];
+    const errors = [new Error('asd'), 'string', 1, undefined, null, {}, new ResponseError('test', 201, null)];
 
     for (const error of errors) {
       try {
         (client as any).errorHandler(error);
       } catch (e) {
-        expect(e).toBeInstanceOf(ResponseException);
+        expect(e).toBeInstanceOf(ResponseError);
         if (e.status !== -1) {
           expect(e).toBe(error);
         } else {
@@ -44,7 +44,7 @@ describe('GenericAPIClient', () => {
     }
 
     (client as any).requestFactory('', {}, fetchHandler).catch(e => {
-      expect(e).toBeInstanceOf(ResponseException);
+      expect(e).toBeInstanceOf(ResponseError);
     });
   });
 

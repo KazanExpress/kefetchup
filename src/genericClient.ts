@@ -1,5 +1,5 @@
 import { defaultFetch } from './defaultFetch';
-import { ResponseException, ResponseErrors } from './errors';
+import { ResponseError, ResponseErrors } from './errors';
 
 /**
  * Generic API client with default request.
@@ -63,7 +63,7 @@ export class GenericAPIClient {
     if (response.ok) {
       return response;
     } else {
-      throw new ResponseException(GenericAPIClient.handleStatus(response.status), response.status, response);
+      throw new ResponseError(GenericAPIClient.handleStatus(response.status), response.status, response);
     }
   }
 
@@ -77,10 +77,12 @@ export class GenericAPIClient {
    * @memberof GenericAPIClient
    */
   protected errorHandler(e): any {
-    if (e instanceof ResponseException)
+    if (e instanceof ResponseError) {
       throw e;
-    else
-      throw new ResponseException('Unkown Error: ', ResponseErrors.UnknownError, e);
+    } else {
+      // Network error!
+      throw new ResponseError('Unkown Error: ', ResponseErrors.UnknownError, e);
+    }
   }
 
   /**

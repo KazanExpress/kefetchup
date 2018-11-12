@@ -1,16 +1,16 @@
 import 'isomorphic-fetch';
-import { ResponseException } from '../src';
+import { ResponseError } from '../src';
 
-describe('ResponseException', () => {
-  it('creates ResponseException instance', () => {
-    let e = new ResponseException('My error message', 403);
-    expect(e).toBeInstanceOf(ResponseException);
+describe('ResponseError', () => {
+  it('creates ResponseError instance', () => {
+    let e = new ResponseError('My error message', 403);
+    expect(e).toBeInstanceOf(ResponseError);
   });
 
   it('stringifies error', () => {
-    let e = new ResponseException('My error message', 403, new Response());
+    let e = new ResponseError('My error message', 403, new Response());
     expect(e).toHaveProperty('message');
     expect(e).toHaveProperty('name');
-    expect(e.toString()).toBe('ResponseException: My error message');
+    expect(e.toString()).toBe('ResponseError: My error message');
   });
 });

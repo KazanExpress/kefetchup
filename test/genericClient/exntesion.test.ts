@@ -1,6 +1,6 @@
 import { TestAPIClient, fetchHandler } from '../common';
 import { JsonAPIClient, TextAPIClient, GenericAPIClient } from '../../src';
-import { ResponseException } from '../../src/errors';
+import { ResponseError } from '../../src/errors';
 
 describe('GenericAPIClient', () => {
   it('allows handler overloads', async () => {
@@ -24,7 +24,7 @@ describe('GenericAPIClient', () => {
           expect(result).toMatchObject(await (await fetchHandler('/test')).text());
         }
       } catch (e) {
-        if (e instanceof ResponseException) {
+        if (e instanceof ResponseError) {
           expect(e.status).toBe(403);
         }
       }

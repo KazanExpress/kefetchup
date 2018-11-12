@@ -1,11 +1,17 @@
-# KeFetchUp!
+<h1 align="center">
+  <img src="logo/color-text.svg"/> 
+</h1>
 
-[![Build Status](https://img.shields.io/travis/KazanExpress/kefetchup/master.svg?logo=travis&style=flat-square)](https://travis-ci.org/KazanExpress/kefetchup) [![Coverage status](https://img.shields.io/coveralls/github/KazanExpress/kefetchup/master.svg?style=flat-square)](https://coveralls.io/github/KazanExpress/kefetchup?branch=master) [![npm](https://img.shields.io/npm/v/kefetchup.svg?style=flat-square)](https://www.npmjs.com/package/kefetchup) 
-[![npm bundle size (minified)](https://img.shields.io/bundlephobia/minzip/kefetchup.svg?style=flat-square)]() [![dependencies (minified)](https://img.shields.io/badge/dependencies-none-yellow.svg?style=flat-square)]()
+<p align="center">
+  <a href="https://travis-ci.org/KazanExpress/kefetchup"><img src="https://img.shields.io/travis/KazanExpress/kefetchup/master.svg?logo=travis&amp;style=flat-square" alt="Build Status" /></a> <a href="https://coveralls.io/github/KazanExpress/kefetchup?branch=master"><img src="https://img.shields.io/coveralls/github/KazanExpress/kefetchup/master.svg?style=flat-square" alt="Coverage status" /></a> <a href="https://www.npmjs.com/package/kefetchup"><img src="https://img.shields.io/npm/v/kefetchup.svg?style=flat-square" alt="npm" /></a> 
+  <a href=""><img src="https://img.shields.io/bundlephobia/minzip/kefetchup.svg?style=flat-square" alt="npm bundle size (minified)" /></a> <a href=""><img src="https://img.shields.io/badge/dependencies-none-yellow.svg?style=flat-square" alt="dependencies (minified)" /></a>
+</p>
 
-> Simple fetch client API to spice up your application
+<p align="center">
+  Simple fetch client API to spice up your application
+</p>
 
-`npm i -S kefetchup`
+<p align="center"><code>npm i -S kefetchup</code></p>
 
 ## What is it?
 
@@ -31,7 +37,7 @@ import {
   TextAPIClient,
 
   // An exception class to use in your error handlers for server-returned errors. Provides statuses and stack traces.
-  ResponseException,
+  ResponseError,
 
   // A comprehensive list of all possible HTTP errors.
   ResponseErrors,
@@ -43,10 +49,12 @@ import {
 
 You'll be fine extending `JsonAPIClient` in most cases. Though, for finer control we recommend using `GenericAPIClient`.
 
-A typical usage example is as follows (using `GenericAPIClient`, for example):
+<details><summary>Usage example</summary>
+
+A typical usage example is as follows (using `GenericAPIClient`):
 
 ```js
-import { GenericAPIClient, ResponseException, ResponseErrors, withQuery } from 'kefetchup'
+import { GenericAPIClient, ResponseError, withQuery } from 'kefetchup'
 
 class MyApiClient extends GenericAPIClient {
 
@@ -61,7 +69,7 @@ class MyApiClient extends GenericAPIClient {
 
     // Let's say we want to throw errors for 400+ statuses too
     if (resp.status >= 400) {
-      throw new ResponseException(ResponseErrors[resp.status], resp.status, resp);
+      throw new ResponseError(MyApiClient.handleStatus(resp.status), resp.status, resp);
     }
 
     return await resp.json();
@@ -88,13 +96,14 @@ class MyApiClient extends GenericAPIClient {
   // In class' body we can write custom method handlers for our API calls
   async getImportantThingsList() {
     try {
-      // Send a GET request to 'https://my-api-server.com/api/important-things?importance=high&amount=5'
+      // Send a GET request to 'https://my-api-server.com/api/important-things?importance=high&amount=5&type={value-of-myVeryImportantSetting}'
       return await this.get(withQuery('/important-things', {
         importance: 'high',
-        amount: 5
+        amount: 5,
+        type: this.myVeryImportantSetting
       }));
     } catch (e) {
-      // e instanceof ResponseException === true
+      // e instanceof ResponseError === true
       // Here you can handle method-specific errors
 
       if (e.status === 401) {
@@ -120,3 +129,5 @@ myApi.getImportantThingsList().then(things => {
   // and catch your errors properly...
 });
 ```
+
+</details>
