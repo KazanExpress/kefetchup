@@ -1,11 +1,17 @@
-# KeFetchUp!
+<h1 align="center">
+  <img src="logo/color-text.svg"/> 
+</h1>
 
-[![Build Status](https://img.shields.io/travis/KazanExpress/kefetchup/master.svg?logo=travis&style=flat-square)](https://travis-ci.org/KazanExpress/kefetchup) [![Coverage status](https://img.shields.io/coveralls/github/KazanExpress/kefetchup/master.svg?style=flat-square)](https://coveralls.io/github/KazanExpress/kefetchup?branch=master) [![npm](https://img.shields.io/npm/v/kefetchup.svg?style=flat-square)](https://www.npmjs.com/package/kefetchup) 
-[![npm bundle size (minified)](https://img.shields.io/bundlephobia/minzip/kefetchup.svg?style=flat-square)]() [![dependencies (minified)](https://img.shields.io/badge/dependencies-none-yellow.svg?style=flat-square)]()
+<p align="center">
+  <a href="https://travis-ci.org/KazanExpress/kefetchup"><img src="https://img.shields.io/travis/KazanExpress/kefetchup/master.svg?logo=travis&amp;style=flat-square" alt="Build Status" /></a> <a href="https://coveralls.io/github/KazanExpress/kefetchup?branch=master"><img src="https://img.shields.io/coveralls/github/KazanExpress/kefetchup/master.svg?style=flat-square" alt="Coverage status" /></a> <a href="https://www.npmjs.com/package/kefetchup"><img src="https://img.shields.io/npm/v/kefetchup.svg?style=flat-square" alt="npm" /></a> 
+  <a href=""><img src="https://img.shields.io/bundlephobia/minzip/kefetchup.svg?style=flat-square" alt="npm bundle size (minified)" /></a> <a href=""><img src="https://img.shields.io/badge/dependencies-none-yellow.svg?style=flat-square" alt="dependencies (minified)" /></a>
+</p>
 
-> Simple fetch client API to spice up your application
+<p align="center">
+  Simple fetch client API to spice up your application
+</p>
 
-`npm i -S kefetchup`
+<p align="center"><code>npm i -S kefetchup</code></p>
 
 ## What is it?
 
