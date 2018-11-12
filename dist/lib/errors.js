@@ -13,21 +13,34 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var ResponseException = /** @class */ (function (_super) {
-    __extends(ResponseException, _super);
-    function ResponseException(message, status, data) {
+var ResponseError = /** @class */ (function (_super) {
+    __extends(ResponseError, _super);
+    function ResponseError(message, status, data) {
         var _this = _super.call(this, message) /* istanbul ignore next: because stupid typescript */ || this;
         _this.status = status;
         _this.data = data;
-        Object.setPrototypeOf(_this, ResponseException.prototype);
+        Object.setPrototypeOf(_this, ResponseError.prototype);
+        _this.name = 'ResponseError';
+        return _this;
+    }
+    ResponseError.prototype.toString = function () {
+        return this.name + ': ' + this.message;
+    };
+    return ResponseError;
+}(Error));
+exports.ResponseError = ResponseError;
+/**
+ * @deprecated use ResponseError instead
+ */ /* istanbul ignore next */
+var ResponseException = /** @class */ (function (_super) {
+    __extends(ResponseException, _super);
+    function ResponseException(message, status, data) {
+        var _this = _super.call(this, message, status, data) || this;
         _this.name = 'ResponseException';
         return _this;
     }
-    ResponseException.prototype.toString = function () {
-        return this.name + ': ' + this.message;
-    };
     return ResponseException;
-}(Error));
+}(ResponseError));
 exports.ResponseException = ResponseException;
 var ResponseErrors;
 (function (ResponseErrors) {

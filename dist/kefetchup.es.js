@@ -1,13 +1,22 @@
-class ResponseException extends Error {
+class ResponseError extends Error {
     constructor(message, status, data) {
         super(message) /* istanbul ignore next: because stupid typescript */;
         this.status = status;
         this.data = data;
-        Object.setPrototypeOf(this, ResponseException.prototype);
-        this.name = 'ResponseException';
+        Object.setPrototypeOf(this, ResponseError.prototype);
+        this.name = 'ResponseError';
     }
     toString() {
         return this.name + ': ' + this.message;
+    }
+}
+/**
+ * @deprecated use ResponseError instead
+ */ /* istanbul ignore next */
+class ResponseException extends ResponseError {
+    constructor(message, status, data) {
+        super(message, status, data);
+        this.name = 'ResponseException';
     }
 }
 var ResponseErrors;
@@ -102,7 +111,7 @@ class GenericAPIClient {
             return response;
         }
         else {
-            throw new ResponseException(GenericAPIClient.handleStatus(response.status), response.status, response);
+            throw new ResponseError(GenericAPIClient.handleStatus(response.status), response.status, response);
         }
     }
     /**
@@ -115,10 +124,13 @@ class GenericAPIClient {
      * @memberof GenericAPIClient
      */
     errorHandler(e) {
-        if (e instanceof ResponseException)
+        if (e instanceof ResponseError) {
             throw e;
-        else
-            throw new ResponseException('Unkown Error: ', ResponseErrors.UnknownError, e);
+        }
+        else {
+            // Network error!
+            throw new ResponseError('Unkown Error: ', ResponseErrors.UnknownError, e);
+        }
     }
     /**
      * A general request factory function.
@@ -212,5 +224,5 @@ class TextAPIClient extends GenericAPIClient {
     }
 }
 
-export { JsonAPIClient, TextAPIClient, GenericAPIClient, ResponseException, ResponseErrors, withQuery };
+export { JsonAPIClient, TextAPIClient, GenericAPIClient, ResponseError, ResponseException, ResponseErrors, withQuery };
 //# sourceMappingURL=kefetchup.es.js.map

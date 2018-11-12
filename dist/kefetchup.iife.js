@@ -35,21 +35,33 @@ var kefetchup = (function (exports) {
         return t;
     };
 
-    var ResponseException = /** @class */ (function (_super) {
-        __extends(ResponseException, _super);
-        function ResponseException(message, status, data) {
+    var ResponseError = /** @class */ (function (_super) {
+        __extends(ResponseError, _super);
+        function ResponseError(message, status, data) {
             var _this = _super.call(this, message) /* istanbul ignore next: because stupid typescript */ || this;
             _this.status = status;
             _this.data = data;
-            Object.setPrototypeOf(_this, ResponseException.prototype);
+            Object.setPrototypeOf(_this, ResponseError.prototype);
+            _this.name = 'ResponseError';
+            return _this;
+        }
+        ResponseError.prototype.toString = function () {
+            return this.name + ': ' + this.message;
+        };
+        return ResponseError;
+    }(Error));
+    /**
+     * @deprecated use ResponseError instead
+     */ /* istanbul ignore next */
+    var ResponseException = /** @class */ (function (_super) {
+        __extends(ResponseException, _super);
+        function ResponseException(message, status, data) {
+            var _this = _super.call(this, message, status, data) || this;
             _this.name = 'ResponseException';
             return _this;
         }
-        ResponseException.prototype.toString = function () {
-            return this.name + ': ' + this.message;
-        };
         return ResponseException;
-    }(Error));
+    }(ResponseError));
     (function (ResponseErrors) {
         ResponseErrors[ResponseErrors["BadRequest"] = 400] = "BadRequest";
         ResponseErrors[ResponseErrors["Unauthorized"] = 401] = "Unauthorized";
@@ -144,7 +156,7 @@ var kefetchup = (function (exports) {
                 return response;
             }
             else {
-                throw new ResponseException(GenericAPIClient.handleStatus(response.status), response.status, response);
+                throw new ResponseError(GenericAPIClient.handleStatus(response.status), response.status, response);
             }
         };
         /**
@@ -157,10 +169,13 @@ var kefetchup = (function (exports) {
          * @memberof GenericAPIClient
          */
         GenericAPIClient.prototype.errorHandler = function (e) {
-            if (e instanceof ResponseException)
+            if (e instanceof ResponseError) {
                 throw e;
-            else
-                throw new ResponseException('Unkown Error: ', exports.ResponseErrors.UnknownError, e);
+            }
+            else {
+                // Network error!
+                throw new ResponseError('Unkown Error: ', exports.ResponseErrors.UnknownError, e);
+            }
         };
         /**
          * A general request factory function.
@@ -271,6 +286,7 @@ var kefetchup = (function (exports) {
     exports.JsonAPIClient = JsonAPIClient;
     exports.TextAPIClient = TextAPIClient;
     exports.GenericAPIClient = GenericAPIClient;
+    exports.ResponseError = ResponseError;
     exports.ResponseException = ResponseException;
     exports.withQuery = withQuery;
 

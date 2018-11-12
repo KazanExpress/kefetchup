@@ -65,7 +65,7 @@ var GenericAPIClient = /** @class */ (function () {
             return response;
         }
         else {
-            throw new errors_1.ResponseException(GenericAPIClient.handleStatus(response.status), response.status, response);
+            throw new errors_1.ResponseError(GenericAPIClient.handleStatus(response.status), response.status, response);
         }
     };
     /**
@@ -78,10 +78,13 @@ var GenericAPIClient = /** @class */ (function () {
      * @memberof GenericAPIClient
      */
     GenericAPIClient.prototype.errorHandler = function (e) {
-        if (e instanceof errors_1.ResponseException)
+        if (e instanceof errors_1.ResponseError) {
             throw e;
-        else
-            throw new errors_1.ResponseException('Unkown Error: ', errors_1.ResponseErrors.UnknownError, e);
+        }
+        else {
+            // Network error!
+            throw new errors_1.ResponseError('Unkown Error: ', errors_1.ResponseErrors.UnknownError, e);
+        }
     };
     /**
      * A general request factory function.

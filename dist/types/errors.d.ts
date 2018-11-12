@@ -1,8 +1,13 @@
-export declare class ResponseException<T = Response> extends Error {
+export declare class ResponseError<T = Response> extends Error {
     status: ResponseErrors;
     data?: T | undefined;
     constructor(message: string, status: ResponseErrors, data?: T | undefined);
     toString(): string;
+}
+/**
+ * @deprecated use ResponseError instead
+ */ export declare class ResponseException<T = Response> extends ResponseError<T> {
+    constructor(message: string, status: ResponseErrors, data?: T);
 }
 export declare enum ResponseErrors {
     BadRequest = 400,
