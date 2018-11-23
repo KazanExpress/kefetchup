@@ -6,7 +6,7 @@ export const realFetch = window.fetch;
 export const fetchHandler = (url: string | Request, fetchConfig: RequestInit = {}): Promise<Response> => {
   return new Promise((resolve, reject) => {
     resolve(new Response(JSON.stringify({
-      method: fetchConfig.method || 'get',
+      method: fetchConfig.method ? fetchConfig.method.toUpperCase() : 'GET',
       url,
       payload: [
         { id: 1, text: 'item 1' },
@@ -21,15 +21,20 @@ export const fetchHandler = (url: string | Request, fetchConfig: RequestInit = {
 }
 
 export class TestAPIClient extends GenericAPIClient {
-  public fetchHandler = fetchHandler;
+  public $fetchHandler = fetchHandler;
 
-  protected responseHandler(r: Response) {
+  protected $responseHandler(r: Response) {
     return r.json();
   }
 
-  protected errorHandler(e) {
+  protected $errorHandler(e) {
     return e.data;
   }
 
-  public trace = this.alias('');
+  public readonly get = this.$alias('get');
+  public readonly put = this.$alias('put');
+  public readonly post = this.$alias('post');
+  public readonly patch = this.$alias('patch');
+  public readonly delete = this.$alias('delete');
+  public readonly trace = this.$alias('');
 }

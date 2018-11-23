@@ -5,15 +5,15 @@ import { fetchHandler } from '../common';
 describe('GenericAPIClient', () => {
   it('works on its own', () => {
     const client = new GenericAPIClient();
-    client.fetchHandler = fetchHandler;
+    client.$fetchHandler = fetchHandler;
 
-    expect(client).toHaveProperty('responseHandler');
-    expect(client).toHaveProperty('errorHandler');
+    expect(client).toHaveProperty('$responseHandler');
+    expect(client).toHaveProperty('$errorHandler');
 
-    expect((client as any).responseHandler({ ok: true })).toMatchObject({ ok: true });
+    expect((client as any).$responseHandler({ ok: true })).toMatchObject({ ok: true });
 
     try {
-      (client as any).responseHandler({});
+      (client as any).$responseHandler({});
 
       // DISCLAIMER: this should never happen.
       expect(true).toBe(false);
@@ -26,7 +26,7 @@ describe('GenericAPIClient', () => {
 
     for (const error of errors) {
       try {
-        (client as any).errorHandler(error);
+        (client as any).$errorHandler(error);
       } catch (e) {
         expect(e).toBeInstanceOf(ResponseError);
         if (e.status !== -1) {
@@ -43,13 +43,13 @@ describe('GenericAPIClient', () => {
       }
     }
 
-    (client as any).requestFactory('', {}, fetchHandler).catch(e => {
+    (client as any).$requestFactory('', {}, fetchHandler).catch(e => {
       expect(e).toBeInstanceOf(ResponseError);
     });
   });
 
   it('falls back to defaultFetch', () => {
     window.fetch = undefined;
-    expect(new GenericAPIClient().fetchHandler).toBe(defaultFetch);
+    expect(new GenericAPIClient().$fetchHandler).toBe(defaultFetch);
   });
 });
