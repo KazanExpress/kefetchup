@@ -4,7 +4,11 @@ import { ResponseError } from '../../src/errors';
 
 describe('GenericAPIClient', () => {
   it('allows handler overloads', async () => {
-    const clients = [new TestAPIClient('', {}), new JsonAPIClient(), new TextAPIClient()];
+    const mixInGet = (Client: typeof GenericAPIClient) => class extends Client {
+      public get = this.alias('get');
+    };
+
+    const clients = [new TestAPIClient('', {}), new (mixInGet(JsonAPIClient))(), new (mixInGet(TextAPIClient))()];
 
     for (const client of clients) {
       client.fetchHandler = fetchHandler;
@@ -16,16 +20,18 @@ describe('GenericAPIClient', () => {
 
       try {
         // Should throw here sometimes
-        const result = await client.get('https://sad', { method: 'get' }, true);
+        const result = await client.get('https://sad', { method: 'GET' }, true);
 
         if (typeof result === 'object') {
-          expect(result).toMatchObject(await (await fetchHandler('/test')).json());
+          expect(result).toMatchObject(await (await fetchHandler('https://sad')).json());
         } else if (typeof result === 'string') {
-          expect(result).toMatchObject(await (await fetchHandler('/test')).text());
+          expect(result).toBe(await (await fetchHandler('https://sad')).text());
         }
       } catch (e) {
         if (e instanceof ResponseError) {
           expect(e.status).toBe(403);
+        } else {
+          expect(e).toBeFalsy();
         }
       }
     }

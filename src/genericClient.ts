@@ -127,12 +127,6 @@ export class GenericAPIClient {
     }
   }
 
-  public readonly get = this.alias('get');
-  public readonly put = this.alias('put');
-  public readonly post = this.alias('post');
-  public readonly patch = this.alias('patch');
-  public readonly delete = this.alias('delete');
-
   /**
    * Retrieves response status string in a readable format from a status number
    *
