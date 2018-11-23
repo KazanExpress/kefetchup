@@ -8,16 +8,16 @@ import { ResponseError, ResponseErrors } from './errors';
  * Can be instantiated on its own for simple singular requests.
  */
 export class GenericAPIClient {
-  public fetchHandler = window.fetch ? window.fetch.bind(window) : defaultFetch;
+  public $fetchHandler = window.fetch ? window.fetch.bind(window) : defaultFetch;
 
   /**
    * Creates an instance of GenericAPIClient.
-   * @param {string} [baseURL=''] a base url to prepend to all request urls except for the ones with root urls
-   * @param {RequestInit} [baseClientConfig={}] a default config for requests
+   * @param {string} [$baseURL=''] a base url to prepend to all request urls except for the ones with root urls
+   * @param {RequestInit} [$baseClientConfig={}] a default config for requests
    */
   constructor(
-    public readonly baseURL: string = '',
-    public readonly baseClientConfig: RequestInit = {}
+    public readonly $baseURL: string = '',
+    public readonly $baseClientConfig: RequestInit = {}
   ) {}
 
   /**
@@ -25,27 +25,27 @@ export class GenericAPIClient {
    *
    * @private
    */
-  private request(
+  private $request(
     url: string,
     fetchConfig: RequestInit,
     overrideDefaultConfig: boolean = false
   ): Promise<any> {
     if (!url.match(/^(\w+:)?\/\//)) {
-      url = this.baseURL ? new URL(url, this.baseURL).href : url;
+      url = this.$baseURL ? new URL(url, this.$baseURL).href : url;
     }
 
-    return this.requestFactory(
+    return this.$requestFactory(
       url,
       overrideDefaultConfig ?
         fetchConfig :
         {
-          ...this.baseClientConfig,
+          ...this.$baseClientConfig,
           ...fetchConfig,
           headers: {
-            ...(this.baseClientConfig.headers || {}), ...(fetchConfig.headers || {})
+            ...(this.$baseClientConfig.headers || {}), ...(fetchConfig.headers || {})
           }
         },
-      this.fetchHandler
+      this.$fetchHandler
     );
   }
 
@@ -59,7 +59,7 @@ export class GenericAPIClient {
    * @returns {*} default: the same response
    * @memberof GenericAPIClient
    */
-  protected responseHandler(response: Response): any {
+  protected $responseHandler(response: Response): any {
     if (response.ok) {
       return response;
     } else {
@@ -76,7 +76,7 @@ export class GenericAPIClient {
    * @param e the error catched from the request promise
    * @memberof GenericAPIClient
    */
-  protected errorHandler(e): any {
+  protected $errorHandler(e): any {
     if (e instanceof ResponseError) {
       throw e;
     } else {
@@ -95,14 +95,14 @@ export class GenericAPIClient {
    * @param config a request config that would be passed into the request function
    * @param requestFunction
    */
-  protected requestFactory(
+  protected $requestFactory(
     url: string,
     config: RequestInit,
     requestFunction: (url: string, config?: RequestInit) => Promise<Response>
   ): Promise<any> {
     return requestFunction(url, config)
-      .then(r => this.responseHandler(r))
-      .catch(e => this.errorHandler(e));
+      .then(r => this.$responseHandler(r))
+      .catch(e => this.$errorHandler(e));
   }
 
   /**
@@ -115,15 +115,15 @@ export class GenericAPIClient {
    * @returns an alias function for request
    * @memberof GenericAPIClient
    */
-  protected alias(method: string) {
+  protected $alias(method: string) {
     return function (this: GenericAPIClient,
       url: string,
-      fetchConfig: RequestInit = this.baseClientConfig,
+      fetchConfig: RequestInit = this.$baseClientConfig,
       overrideDefaultConfig?: boolean
-    ): ReturnType<typeof this['request']> {
+    ): ReturnType<typeof this['$request']> {
       fetchConfig = fetchConfig;
       fetchConfig.method = method ? method.toUpperCase() : (fetchConfig.method || 'GET').toUpperCase();
-      return this.request(url, fetchConfig, overrideDefaultConfig);
+      return this.$request(url, fetchConfig, overrideDefaultConfig);
     }
   }
 

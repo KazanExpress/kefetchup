@@ -11,7 +11,7 @@ export class JsonAPIClient extends GenericAPIClient {
   /**
    * @inheritdoc
    */
-  responseHandler(resp: Response): Promise<unknown> {
+  $responseHandler(resp: Response): Promise<unknown> {
     return resp.json();
   }
 }
@@ -23,7 +23,7 @@ export class TextAPIClient extends GenericAPIClient {
   /**
    * @inheritdoc
    */
-  responseHandler(resp: Response) {
+  $responseHandler(resp: Response) {
     return resp.text();
   }
 }

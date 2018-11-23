@@ -5,18 +5,18 @@ import { ResponseError } from '../../src/errors';
 describe('GenericAPIClient', () => {
   it('allows handler overloads', async () => {
     const mixInGet = (Client: typeof GenericAPIClient) => class extends Client {
-      public get = this.alias('get');
+      public get = this.$alias('get');
     };
 
     const clients = [new TestAPIClient('', {}), new (mixInGet(JsonAPIClient))(), new (mixInGet(TextAPIClient))()];
 
     for (const client of clients) {
-      client.fetchHandler = fetchHandler;
+      client.$fetchHandler = fetchHandler;
 
       // Check whether the client has overriden the responseHandler...
-      expect((client as any).responseHandler).not.toEqual((new GenericAPIClient() as any).responseHandler);
+      expect((client as any).$responseHandler).not.toEqual((new GenericAPIClient() as any).$responseHandler);
       // ...and hasn't overriden the request method.
-      expect((client as any).request).toEqual((new GenericAPIClient() as any).request);
+      expect((client as any).$request).toEqual((new GenericAPIClient() as any).$request);
 
       try {
         // Should throw here sometimes
