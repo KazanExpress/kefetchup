@@ -22,33 +22,28 @@ var errors_1 = require("./errors");
 var GenericAPIClient = /** @class */ (function () {
     /**
      * Creates an instance of GenericAPIClient.
-     * @param {string} [baseURL=''] a base url to prepend to all request urls except for the ones with root urls
-     * @param {RequestInit} [baseClientConfig={}] a default config for requests
+     * @param {string} [$baseURL=''] a base url to prepend to all request urls except for the ones with root urls
+     * @param {RequestInit} [$baseClientConfig={}] a default config for requests
      */
-    function GenericAPIClient(baseURL, baseClientConfig) {
-        if (baseURL === void 0) { baseURL = ''; }
-        if (baseClientConfig === void 0) { baseClientConfig = {}; }
-        this.baseURL = baseURL;
-        this.baseClientConfig = baseClientConfig;
-        this.fetchHandler = window.fetch ? window.fetch.bind(window) : defaultFetch_1.defaultFetch;
-        this.get = this.alias('get');
-        this.put = this.alias('put');
-        this.post = this.alias('post');
-        this.patch = this.alias('patch');
-        this.delete = this.alias('delete');
+    function GenericAPIClient($baseURL, $baseClientConfig) {
+        if ($baseURL === void 0) { $baseURL = ''; }
+        if ($baseClientConfig === void 0) { $baseClientConfig = {}; }
+        this.$baseURL = $baseURL;
+        this.$baseClientConfig = $baseClientConfig;
+        this.$fetchHandler = window.fetch ? window.fetch.bind(window) : defaultFetch_1.defaultFetch;
     }
     /**
      * Makes requests using request factory and resolves config merge conflicts.
      *
      * @private
      */
-    GenericAPIClient.prototype.request = function (url, fetchConfig, overrideDefaultConfig) {
+    GenericAPIClient.prototype.$request = function (url, fetchConfig, overrideDefaultConfig) {
         if (overrideDefaultConfig === void 0) { overrideDefaultConfig = false; }
         if (!url.match(/^(\w+:)?\/\//)) {
-            url = this.baseURL ? new URL(url, this.baseURL).href : url;
+            url = this.$baseURL ? new URL(url, this.$baseURL).href : url;
         }
-        return this.requestFactory(url, overrideDefaultConfig ?
-            fetchConfig : __assign({}, this.baseClientConfig, fetchConfig, { headers: __assign({}, (this.baseClientConfig.headers || {}), (fetchConfig.headers || {})) }), this.fetchHandler);
+        return this.$requestFactory(url, overrideDefaultConfig ?
+            fetchConfig : __assign({}, this.$baseClientConfig, fetchConfig, { headers: __assign({}, (this.$baseClientConfig.headers || {}), (fetchConfig.headers || {})) }), this.$fetchHandler);
     };
     /**
      * Processes the response before allowing to return its value from request function.
@@ -60,7 +55,7 @@ var GenericAPIClient = /** @class */ (function () {
      * @returns {*} default: the same response
      * @memberof GenericAPIClient
      */
-    GenericAPIClient.prototype.responseHandler = function (response) {
+    GenericAPIClient.prototype.$responseHandler = function (response) {
         if (response.ok) {
             return response;
         }
@@ -77,7 +72,7 @@ var GenericAPIClient = /** @class */ (function () {
      * @param e the error catched from the request promise
      * @memberof GenericAPIClient
      */
-    GenericAPIClient.prototype.errorHandler = function (e) {
+    GenericAPIClient.prototype.$errorHandler = function (e) {
         if (e instanceof errors_1.ResponseError) {
             throw e;
         }
@@ -96,11 +91,11 @@ var GenericAPIClient = /** @class */ (function () {
      * @param config a request config that would be passed into the request function
      * @param requestFunction
      */
-    GenericAPIClient.prototype.requestFactory = function (url, config, requestFunction) {
+    GenericAPIClient.prototype.$requestFactory = function (url, config, requestFunction) {
         var _this = this;
         return requestFunction(url, config)
-            .then(function (r) { return _this.responseHandler(r); })
-            .catch(function (e) { return _this.errorHandler(e); });
+            .then(function (r) { return _this.$responseHandler(r); })
+            .catch(function (e) { return _this.$errorHandler(e); });
     };
     /**
      * Request method alias factory.
@@ -112,12 +107,12 @@ var GenericAPIClient = /** @class */ (function () {
      * @returns an alias function for request
      * @memberof GenericAPIClient
      */
-    GenericAPIClient.prototype.alias = function (method) {
+    GenericAPIClient.prototype.$alias = function (method) {
         return function (url, fetchConfig, overrideDefaultConfig) {
-            if (fetchConfig === void 0) { fetchConfig = this.baseClientConfig; }
+            if (fetchConfig === void 0) { fetchConfig = this.$baseClientConfig; }
             fetchConfig = fetchConfig;
             fetchConfig.method = method ? method.toUpperCase() : (fetchConfig.method || 'GET').toUpperCase();
-            return this.request(url, fetchConfig, overrideDefaultConfig);
+            return this.$request(url, fetchConfig, overrideDefaultConfig);
         };
     };
     GenericAPIClient.handleStatus = function (status) {

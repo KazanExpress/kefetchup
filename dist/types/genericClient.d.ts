@@ -5,21 +5,21 @@
  * Can be instantiated on its own for simple singular requests.
  */
 export declare class GenericAPIClient {
-    readonly baseURL: string;
-    readonly baseClientConfig: RequestInit;
-    fetchHandler: any;
+    readonly $baseURL: string;
+    readonly $baseClientConfig: RequestInit;
+    $fetchHandler: any;
     /**
      * Creates an instance of GenericAPIClient.
-     * @param {string} [baseURL=''] a base url to prepend to all request urls except for the ones with root urls
-     * @param {RequestInit} [baseClientConfig={}] a default config for requests
+     * @param {string} [$baseURL=''] a base url to prepend to all request urls except for the ones with root urls
+     * @param {RequestInit} [$baseClientConfig={}] a default config for requests
      */
-    constructor(baseURL?: string, baseClientConfig?: RequestInit);
+    constructor($baseURL?: string, $baseClientConfig?: RequestInit);
     /**
      * Makes requests using request factory and resolves config merge conflicts.
      *
      * @private
      */
-    private request;
+    private $request;
     /**
      * Processes the response before allowing to return its value from request function.
      * Override this function to provide custom response interception.
@@ -30,7 +30,7 @@ export declare class GenericAPIClient {
      * @returns {*} default: the same response
      * @memberof GenericAPIClient
      */
-    protected responseHandler(response: Response): any;
+    protected $responseHandler(response: Response): any;
     /**
      * Processes the request error before allowing to throw it upstack.
      * Override this function to provide custom response error handling.
@@ -40,7 +40,7 @@ export declare class GenericAPIClient {
      * @param e the error catched from the request promise
      * @memberof GenericAPIClient
      */
-    protected errorHandler(e: any): any;
+    protected $errorHandler(e: any): any;
     /**
      * A general request factory function.
      * Calls request and error handlers, can be used for pre-processing the url and request config before sending.
@@ -51,7 +51,7 @@ export declare class GenericAPIClient {
      * @param config a request config that would be passed into the request function
      * @param requestFunction
      */
-    protected requestFactory(url: string, config: RequestInit, requestFunction: (url: string, config?: RequestInit) => Promise<Response>): Promise<any>;
+    protected $requestFactory(url: string, config: RequestInit, requestFunction: (url: string, config?: RequestInit) => Promise<Response>): Promise<any>;
     /**
      * Request method alias factory.
      * Used to quickly produce alias function for class' decendants.
@@ -62,12 +62,7 @@ export declare class GenericAPIClient {
      * @returns an alias function for request
      * @memberof GenericAPIClient
      */
-    protected alias(method: string): (this: GenericAPIClient, url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean | undefined) => Promise<any>;
-    readonly get: (this: GenericAPIClient, url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean | undefined) => Promise<any>;
-    readonly put: (this: GenericAPIClient, url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean | undefined) => Promise<any>;
-    readonly post: (this: GenericAPIClient, url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean | undefined) => Promise<any>;
-    readonly patch: (this: GenericAPIClient, url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean | undefined) => Promise<any>;
-    readonly delete: (this: GenericAPIClient, url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean | undefined) => Promise<any>;
+    protected $alias(method: string): (this: GenericAPIClient, url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean | undefined) => Promise<any>;
     /**
      * Retrieves response status string in a readable format from a status number
      *
