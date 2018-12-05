@@ -31,7 +31,7 @@ var JsonAPIClient = /** @class */ (function (_super) {
     /**
      * @inheritdoc
      */
-    JsonAPIClient.prototype.responseHandler = function (resp) {
+    JsonAPIClient.prototype.$responseHandler = function (resp) {
         return resp.json();
     };
     return JsonAPIClient;
@@ -48,7 +48,7 @@ var TextAPIClient = /** @class */ (function (_super) {
     /**
      * @inheritdoc
      */
-    TextAPIClient.prototype.responseHandler = function (resp) {
+    TextAPIClient.prototype.$responseHandler = function (resp) {
         return resp.text();
     };
     return TextAPIClient;

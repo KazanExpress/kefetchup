@@ -71,30 +71,25 @@ const defaultFetchHandlerResponseOptions = {
 class GenericAPIClient {
     /**
      * Creates an instance of GenericAPIClient.
-     * @param {string} [baseURL=''] a base url to prepend to all request urls except for the ones with root urls
-     * @param {RequestInit} [baseClientConfig={}] a default config for requests
+     * @param {string} [$baseURL=''] a base url to prepend to all request urls except for the ones with root urls
+     * @param {RequestInit} [$baseClientConfig={}] a default config for requests
      */
-    constructor(baseURL = '', baseClientConfig = {}) {
-        this.baseURL = baseURL;
-        this.baseClientConfig = baseClientConfig;
-        this.fetchHandler = window.fetch ? window.fetch.bind(window) : defaultFetch;
-        this.get = this.alias('get');
-        this.put = this.alias('put');
-        this.post = this.alias('post');
-        this.patch = this.alias('patch');
-        this.delete = this.alias('delete');
+    constructor($baseURL = '', $baseClientConfig = {}) {
+        this.$baseURL = $baseURL;
+        this.$baseClientConfig = $baseClientConfig;
+        this.$fetchHandler = window.fetch ? window.fetch.bind(window) : defaultFetch;
     }
     /**
      * Makes requests using request factory and resolves config merge conflicts.
      *
      * @private
      */
-    request(url, fetchConfig, overrideDefaultConfig = false) {
+    $request(url, fetchConfig, overrideDefaultConfig = false) {
         if (!url.match(/^(\w+:)?\/\//)) {
-            url = this.baseURL ? new URL(url, this.baseURL).href : url;
+            url = this.$baseURL ? new URL(url, this.$baseURL).href : url;
         }
-        return this.requestFactory(url, overrideDefaultConfig ?
-            fetchConfig : Object.assign({}, this.baseClientConfig, fetchConfig, { headers: Object.assign({}, (this.baseClientConfig.headers || {}), (fetchConfig.headers || {})) }), this.fetchHandler);
+        return this.$requestFactory(url, overrideDefaultConfig ?
+            fetchConfig : Object.assign({}, this.$baseClientConfig, fetchConfig, { headers: Object.assign({}, (this.$baseClientConfig.headers || {}), (fetchConfig.headers || {})) }), this.$fetchHandler);
     }
     /**
      * Processes the response before allowing to return its value from request function.
@@ -106,7 +101,7 @@ class GenericAPIClient {
      * @returns {*} default: the same response
      * @memberof GenericAPIClient
      */
-    responseHandler(response) {
+    $responseHandler(response) {
         if (response.ok) {
             return response;
         }
@@ -123,7 +118,7 @@ class GenericAPIClient {
      * @param e the error catched from the request promise
      * @memberof GenericAPIClient
      */
-    errorHandler(e) {
+    $errorHandler(e) {
         if (e instanceof ResponseError) {
             throw e;
         }
@@ -142,10 +137,10 @@ class GenericAPIClient {
      * @param config a request config that would be passed into the request function
      * @param requestFunction
      */
-    requestFactory(url, config, requestFunction) {
+    $requestFactory(url, config, requestFunction) {
         return requestFunction(url, config)
-            .then(r => this.responseHandler(r))
-            .catch(e => this.errorHandler(e));
+            .then(r => this.$responseHandler(r))
+            .catch(e => this.$errorHandler(e));
     }
     /**
      * Request method alias factory.
@@ -157,11 +152,11 @@ class GenericAPIClient {
      * @returns an alias function for request
      * @memberof GenericAPIClient
      */
-    alias(method) {
-        return function (url, fetchConfig = this.baseClientConfig, overrideDefaultConfig) {
+    $alias(method) {
+        return function (url, fetchConfig = this.$baseClientConfig, overrideDefaultConfig) {
             fetchConfig = fetchConfig;
             fetchConfig.method = method ? method.toUpperCase() : (fetchConfig.method || 'GET').toUpperCase();
-            return this.request(url, fetchConfig, overrideDefaultConfig);
+            return this.$request(url, fetchConfig, overrideDefaultConfig);
         };
     }
     static handleStatus(status = -1) {
@@ -208,7 +203,7 @@ class JsonAPIClient extends GenericAPIClient {
     /**
      * @inheritdoc
      */
-    responseHandler(resp) {
+    $responseHandler(resp) {
         return resp.json();
     }
 }
@@ -219,7 +214,7 @@ class TextAPIClient extends GenericAPIClient {
     /**
      * @inheritdoc
      */
-    responseHandler(resp) {
+    $responseHandler(resp) {
         return resp.text();
     }
 }
