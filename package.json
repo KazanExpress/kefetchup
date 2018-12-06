@@ -6,10 +6,11 @@
   "main": "dist/lib/index.js",
   "module": "dist/kefetchup.es.js",
   "unpkg": "dist/kefetchup.iife.js",
-  "typings": "dist/types/kefetchup.d.ts",
+  "typings": "dist/types/index.d.ts",
   "files": [
     "src",
-    "dist"
+    "dist",
+    "index.ts"
   ],
   "author": "Karen <dev.kaskar2008@gmail.com>",
   "repository": "KazanExpress/kefetchup",
@@ -22,7 +23,9 @@
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && rollup -c rollup.config.ts",
+    "build:es": "tsc --module es6 --target es6 --outDir ./dist/es",
+    "build:cjs": "tsc --module commonjs --target es5 --outDir ./dist/cjs",
+    "build": "npm run build:cjs && npm run build:es && rollup -c rollup.config.ts",
     "start": "rollup -c rollup.config.ts -w",
     "test": "jest",
     "test:watch": "jest --watch",
