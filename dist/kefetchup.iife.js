@@ -101,7 +101,7 @@ var kefetchup = (function (exports) {
     var defaultFetchHandlerResponseBody = function (url, options) { return (__assign({ error: 'Default-fetch-handler response.' }, (url === undefined ? {} : { to: url }), (options === undefined ? {} : { options: options }))); };
     var defaultFetchHandlerResponseOptions = {
         status: exports.ResponseErrors["I'm a teapot"],
-        statusText: '`fetch` missing in `window`'
+        statusText: (typeof fetch !== 'undefined') ? 'why do you use mee?..' : '`fetch` missing in `window`'
     };
 
     /**

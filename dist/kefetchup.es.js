@@ -59,7 +59,7 @@ function defaultFetch(url, options) {
 const defaultFetchHandlerResponseBody = (url, options) => (Object.assign({ error: 'Default-fetch-handler response.' }, (url === undefined ? {} : { to: url }), (options === undefined ? {} : { options })));
 const defaultFetchHandlerResponseOptions = {
     status: ResponseErrors[`I'm a teapot`],
-    statusText: '`fetch` missing in `window`'
+    statusText: (typeof fetch !== 'undefined') ? 'why do you use mee?..' : '`fetch` missing in `window`'
 };
 
 /**

@@ -27,6 +27,6 @@ exports.defaultFetch = defaultFetch;
 exports.defaultFetchHandlerResponseBody = function (url, options) { return (__assign({ error: 'Default-fetch-handler response.' }, (url === undefined ? {} : { to: url }), (options === undefined ? {} : { options: options }))); };
 exports.defaultFetchHandlerResponseOptions = {
     status: errors_1.ResponseErrors["I'm a teapot"],
-    statusText: '`fetch` missing in `window`'
+    statusText: (typeof fetch !== 'undefined') ? 'why do you use mee?..' : '`fetch` missing in `window`'
 };
 //# sourceMappingURL=defaultFetch.js.map
