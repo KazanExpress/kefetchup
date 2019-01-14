@@ -10,7 +10,7 @@ export class ResponseError<T = Response> extends Error {
   }
 
   toString() {
-    return this.name + ': ' + this.message;
+    return this.name + ': ' + this.message + (this.data != undefined ? '\n\n' + this.data : '');
   }
 }
 

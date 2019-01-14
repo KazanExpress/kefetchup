@@ -10,7 +10,8 @@
   "files": [
     "src",
     "dist",
-    "index.ts"
+    "index.ts",
+    "logo"
   ],
   "author": "Karen <dev.kaskar2008@gmail.com>",
   "repository": "KazanExpress/kefetchup",
