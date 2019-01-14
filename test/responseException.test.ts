@@ -11,6 +11,11 @@ describe('ResponseError', () => {
     let e = new ResponseError('My error message', 403, new Response());
     expect(e).toHaveProperty('message');
     expect(e).toHaveProperty('name');
-    expect(e.toString()).toBe('ResponseError: My error message');
+    expect(e.toString().startsWith('ResponseError: My error message')).toBe(true);
+
+    e = new ResponseError('My error message', 403);
+    expect(e).toHaveProperty('message');
+    expect(e).toHaveProperty('name');
+    expect(e.toString().startsWith('ResponseError: My error message')).toBe(true);
   });
 });
