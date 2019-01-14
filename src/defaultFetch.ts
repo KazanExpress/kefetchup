@@ -25,5 +25,5 @@ export const defaultFetchHandlerResponseBody = (url: string, options?: RequestIn
 
 export const defaultFetchHandlerResponseOptions = {
   status: ResponseErrors[`I'm a teapot`],
-  statusText: '`fetch` missing in `window`'
+  statusText: (typeof fetch !== 'undefined') ? 'why do you use mee?..' : '`fetch` missing in `window`'
 };
