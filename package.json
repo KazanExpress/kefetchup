@@ -10,7 +10,8 @@
   "files": [
     "src",
     "dist",
-    "index.ts"
+    "index.ts",
+    "logo"
   ],
   "author": "Karen <dev.kaskar2008@gmail.com>",
   "repository": "KazanExpress/kefetchup",
@@ -34,7 +35,8 @@
     "preversion": "npm run test:prod && npm run build && (git add .) && git commit -m tests-and-build.",
     "patch": "npm version patch && npm publish && git push",
     "minor": "npm version minor && npm publish && git push",
-    "major": "npm version major && npm publish && git push"
+    "major": "npm version major && npm publish && git push",
+    "preinstall": "git config core.hooksPath ./.commitlint/hooks"
   },
   "jest": {
     "testURL": "http://google.com/",
@@ -68,6 +70,7 @@
     "collectCoverage": true
   },
   "devDependencies": {
+    "@commitlint/cli": "^7.3.1",
     "@types/jest": "^22.0.0",
     "@types/node": "^10.0.3",
     "@types/node-fetch": "^2.1.2",
