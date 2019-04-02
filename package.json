@@ -35,8 +35,7 @@
     "preversion": "npm run test:prod && npm run build && (git add .) && git commit -m \"Update [dist]: fresh build\"",
     "patch": "npm version patch && npm publish && git push",
     "minor": "npm version minor && npm publish && git push",
-    "major": "npm version major && npm publish && git push",
-    "preinstall": "git config core.hooksPath ./.commitlint/hooks"
+    "major": "npm version major && npm publish && git push"
   },
   "jest": {
     "testURL": "http://google.com/",
