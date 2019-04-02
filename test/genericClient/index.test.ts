@@ -2,6 +2,10 @@ import { defaultFetch } from '../../src/defaultFetch';
 import { GenericAPIClient, ResponseError } from '../../src';
 import { fetchHandler } from '../common';
 
+interface Window {
+  [key: string]: any
+}
+
 describe('GenericAPIClient', () => {
   it('works on its own', () => {
     const client = new GenericAPIClient();
@@ -49,7 +53,7 @@ describe('GenericAPIClient', () => {
   });
 
   it('falls back to defaultFetch', () => {
-    window.fetch = undefined;
+    (window as Window).fetch = undefined;
     expect(new GenericAPIClient().$fetchHandler).toBe(defaultFetch);
   });
 });
