@@ -49,7 +49,7 @@
             return _this;
         }
         ResponseError.prototype.toString = function () {
-            return this.name + ': ' + this.message;
+            return this.name + ': ' + this.message + (this.data != undefined ? '\n\n' + this.data : '');
         };
         return ResponseError;
     }(Error));

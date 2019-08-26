@@ -4,7 +4,7 @@ import { GenericAPIClient } from '../src';
 export const realFetch = window.fetch;
 
 export const fetchHandler = (url: string | Request, fetchConfig: RequestInit = {}): Promise<Response> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     resolve(new Response(JSON.stringify({
       method: fetchConfig.method ? fetchConfig.method.toUpperCase() : 'GET',
       url,

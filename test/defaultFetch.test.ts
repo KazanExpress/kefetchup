@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { defaultFetch, defaultFetchHandlerResponseBody, defaultFetchHandlerResponseOptions } from '../src/defaultFetch';
+import { defaultFetch, defaultFetchHandlerResponseBody } from '../src/defaultFetch';
 
 describe('defaultFetch', () => {
   it('it returns the same promise regardless of arguments', async () => {

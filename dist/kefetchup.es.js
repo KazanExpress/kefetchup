@@ -7,7 +7,7 @@ class ResponseError extends Error {
         this.name = 'ResponseError';
     }
     toString() {
-        return this.name + ': ' + this.message;
+        return this.name + ': ' + this.message + (this.data != undefined ? '\n\n' + this.data : '');
     }
 }
 /**
