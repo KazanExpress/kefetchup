@@ -1,8 +1,17 @@
+import { RequestFunction } from './genericClient';
+
+const safeAppend = (init: string, ...strs: any[]) => [init].concat(strs.filter(_ => _ != null).map(String)).join('\n');
+
 export class ResponseError<T = Response> extends Error {
   constructor(
     message: string,
     public status: ResponseErrors,
-    public data?: T
+    public data?: T,
+    public request?: {
+      url: string;
+      config: RequestInit;
+      request: RequestFunction;
+    }
   ) {
     super(message)/* istanbul ignore next: because stupid typescript */;
     Object.setPrototypeOf(this, ResponseError.prototype);
@@ -10,7 +19,7 @@ export class ResponseError<T = Response> extends Error {
   }
 
   toString() {
-    return this.name + ': ' + this.message + (this.data != undefined ? '\n\n' + this.data : '');
+    return safeAppend(this.name + ': ' + this.message, this.data, this.request);
   }
 }
 
