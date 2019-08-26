@@ -87,7 +87,9 @@ export class GenericAPIClient {
       throw e;
     } else {
       // Network error!
-      throw new ResponseError('Unkown Error: ', ResponseErrors.UnknownError, e);
+      throw new ResponseError('Unkown Error: ', ResponseErrors.UnknownError, e, {
+        url, config, request
+      });
     }
   }
 
