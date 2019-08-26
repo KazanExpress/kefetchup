@@ -13,18 +13,26 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var safeAppend = function (init) {
+    var strs = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        strs[_i - 1] = arguments[_i];
+    }
+    return [init].concat(strs.filter(function (_) { return _ != null; }).map(String)).join('\n');
+};
 var ResponseError = /** @class */ (function (_super) {
     __extends(ResponseError, _super);
-    function ResponseError(message, status, data) {
+    function ResponseError(message, status, data, request) {
         var _this = _super.call(this, message) /* istanbul ignore next: because stupid typescript */ || this;
         _this.status = status;
         _this.data = data;
+        _this.request = request;
         Object.setPrototypeOf(_this, ResponseError.prototype);
         _this.name = 'ResponseError';
         return _this;
     }
     ResponseError.prototype.toString = function () {
-        return this.name + ': ' + this.message + (this.data != undefined ? '\n\n' + this.data : '');
+        return safeAppend(this.name + ': ' + this.message, this.data, this.request);
     };
     return ResponseError;
 }(Error));

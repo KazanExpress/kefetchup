@@ -1,7 +1,17 @@
+import { RequestFunction } from './genericClient';
 export declare class ResponseError<T = Response> extends Error {
     status: ResponseErrors;
     data?: T | undefined;
-    constructor(message: string, status: ResponseErrors, data?: T | undefined);
+    request?: {
+        url: string;
+        config: RequestInit;
+        request: RequestFunction;
+    } | undefined;
+    constructor(message: string, status: ResponseErrors, data?: T | undefined, request?: {
+        url: string;
+        config: RequestInit;
+        request: RequestFunction;
+    } | undefined);
     toString(): string;
 }
 /**

@@ -1,3 +1,4 @@
+export declare type RequestFunction = (url: string, config?: RequestInit) => Promise<Response>;
 /**
  * Generic API client with default request.
  * Inherit from this class to create a custom extendable api client.
@@ -38,9 +39,12 @@ export declare class GenericAPIClient {
      *
      * @protected
      * @param e the error catched from the request promise
+     * @param url a url string that would be passed into the request function
+     * @param config a request config that would be passed into the request function
+     * @param request a function that performs a request (for retrying purposes)
      * @memberof GenericAPIClient
      */
-    protected $errorHandler(e: any): any;
+    protected $errorHandler(e: any, url: string, config: RequestInit, request: RequestFunction): any;
     /**
      * A general request factory function.
      * Calls request and error handlers, can be used for pre-processing the url and request config before sending.
@@ -51,7 +55,7 @@ export declare class GenericAPIClient {
      * @param config a request config that would be passed into the request function
      * @param requestFunction
      */
-    protected $requestFactory(url: string, config: RequestInit, requestFunction: (url: string, config?: RequestInit) => Promise<Response>): Promise<any>;
+    protected $requestFactory(url: string, config: RequestInit, requestFunction: RequestFunction): Promise<any>;
     /**
      * Request method alias factory.
      * Used to quickly produce alias function for class' decendants.

@@ -70,15 +70,21 @@ var GenericAPIClient = /** @class */ (function () {
      *
      * @protected
      * @param e the error catched from the request promise
+     * @param url a url string that would be passed into the request function
+     * @param config a request config that would be passed into the request function
+     * @param request a function that performs a request (for retrying purposes)
      * @memberof GenericAPIClient
      */
-    GenericAPIClient.prototype.$errorHandler = function (e) {
+    //@ts-ignore
+    GenericAPIClient.prototype.$errorHandler = function (e, url, config, request) {
         if (e instanceof errors_1.ResponseError) {
             throw e;
         }
         else {
             // Network error!
-            throw new errors_1.ResponseError('Unkown Error: ', errors_1.ResponseErrors.UnknownError, e);
+            throw new errors_1.ResponseError('Unkown Error: ', errors_1.ResponseErrors.UnknownError, e, {
+                url: url, config: config, request: request
+            });
         }
     };
     /**
@@ -95,7 +101,7 @@ var GenericAPIClient = /** @class */ (function () {
         var _this = this;
         return requestFunction(url, config)
             .then(function (r) { return _this.$responseHandler(r); })
-            .catch(function (e) { return _this.$errorHandler(e); });
+            .catch(function (e) { return _this.$errorHandler(e, url, config, requestFunction); });
     };
     /**
      * Request method alias factory.
@@ -110,7 +116,6 @@ var GenericAPIClient = /** @class */ (function () {
     GenericAPIClient.prototype.$alias = function (method) {
         return function (url, fetchConfig, overrideDefaultConfig) {
             if (fetchConfig === void 0) { fetchConfig = this.$baseClientConfig; }
-            fetchConfig = fetchConfig;
             fetchConfig.method = method ? method.toUpperCase() : (fetchConfig.method || 'GET').toUpperCase();
             return this.$request(url, fetchConfig, overrideDefaultConfig);
         };

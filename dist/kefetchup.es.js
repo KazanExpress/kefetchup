@@ -1,13 +1,15 @@
+const safeAppend = (init, ...strs) => [init].concat(strs.filter(_ => _ != null).map(String)).join('\n');
 class ResponseError extends Error {
-    constructor(message, status, data) {
+    constructor(message, status, data, request) {
         super(message) /* istanbul ignore next: because stupid typescript */;
         this.status = status;
         this.data = data;
+        this.request = request;
         Object.setPrototypeOf(this, ResponseError.prototype);
         this.name = 'ResponseError';
     }
     toString() {
-        return this.name + ': ' + this.message + (this.data != undefined ? '\n\n' + this.data : '');
+        return safeAppend(this.name + ': ' + this.message, this.data, this.request);
     }
 }
 /**
@@ -116,15 +118,21 @@ class GenericAPIClient {
      *
      * @protected
      * @param e the error catched from the request promise
+     * @param url a url string that would be passed into the request function
+     * @param config a request config that would be passed into the request function
+     * @param request a function that performs a request (for retrying purposes)
      * @memberof GenericAPIClient
      */
-    $errorHandler(e) {
+    //@ts-ignore
+    $errorHandler(e, url, config, request) {
         if (e instanceof ResponseError) {
             throw e;
         }
         else {
             // Network error!
-            throw new ResponseError('Unkown Error: ', ResponseErrors.UnknownError, e);
+            throw new ResponseError('Unkown Error: ', ResponseErrors.UnknownError, e, {
+                url, config, request
+            });
         }
     }
     /**
@@ -140,7 +148,7 @@ class GenericAPIClient {
     $requestFactory(url, config, requestFunction) {
         return requestFunction(url, config)
             .then(r => this.$responseHandler(r))
-            .catch(e => this.$errorHandler(e));
+            .catch(e => this.$errorHandler(e, url, config, requestFunction));
     }
     /**
      * Request method alias factory.
@@ -154,7 +162,6 @@ class GenericAPIClient {
      */
     $alias(method) {
         return function (url, fetchConfig = this.$baseClientConfig, overrideDefaultConfig) {
-            fetchConfig = fetchConfig;
             fetchConfig.method = method ? method.toUpperCase() : (fetchConfig.method || 'GET').toUpperCase();
             return this.$request(url, fetchConfig, overrideDefaultConfig);
         };

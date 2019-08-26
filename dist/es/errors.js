@@ -1,13 +1,15 @@
+const safeAppend = (init, ...strs) => [init].concat(strs.filter(_ => _ != null).map(String)).join('\n');
 export class ResponseError extends Error {
-    constructor(message, status, data) {
+    constructor(message, status, data, request) {
         super(message) /* istanbul ignore next: because stupid typescript */;
         this.status = status;
         this.data = data;
+        this.request = request;
         Object.setPrototypeOf(this, ResponseError.prototype);
         this.name = 'ResponseError';
     }
     toString() {
-        return this.name + ': ' + this.message + (this.data != undefined ? '\n\n' + this.data : '');
+        return safeAppend(this.name + ': ' + this.message, this.data, this.request);
     }
 }
 /**

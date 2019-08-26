@@ -36,18 +36,26 @@ var __assign = Object.assign || function __assign(t) {
     return t;
 };
 
+var safeAppend = function (init) {
+    var strs = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        strs[_i - 1] = arguments[_i];
+    }
+    return [init].concat(strs.filter(function (_) { return _ != null; }).map(String)).join('\n');
+};
 var ResponseError = /** @class */ (function (_super) {
     __extends(ResponseError, _super);
-    function ResponseError(message, status, data) {
+    function ResponseError(message, status, data, request) {
         var _this = _super.call(this, message) /* istanbul ignore next: because stupid typescript */ || this;
         _this.status = status;
         _this.data = data;
+        _this.request = request;
         Object.setPrototypeOf(_this, ResponseError.prototype);
         _this.name = 'ResponseError';
         return _this;
     }
     ResponseError.prototype.toString = function () {
-        return this.name + ': ' + this.message + (this.data != undefined ? '\n\n' + this.data : '');
+        return safeAppend(this.name + ': ' + this.message, this.data, this.request);
     };
     return ResponseError;
 }(Error));
@@ -162,15 +170,21 @@ var GenericAPIClient = /** @class */ (function () {
      *
      * @protected
      * @param e the error catched from the request promise
+     * @param url a url string that would be passed into the request function
+     * @param config a request config that would be passed into the request function
+     * @param request a function that performs a request (for retrying purposes)
      * @memberof GenericAPIClient
      */
-    GenericAPIClient.prototype.$errorHandler = function (e) {
+    //@ts-ignore
+    GenericAPIClient.prototype.$errorHandler = function (e, url, config, request) {
         if (e instanceof ResponseError) {
             throw e;
         }
         else {
             // Network error!
-            throw new ResponseError('Unkown Error: ', exports.ResponseErrors.UnknownError, e);
+            throw new ResponseError('Unkown Error: ', exports.ResponseErrors.UnknownError, e, {
+                url: url, config: config, request: request
+            });
         }
     };
     /**
@@ -187,7 +201,7 @@ var GenericAPIClient = /** @class */ (function () {
         var _this = this;
         return requestFunction(url, config)
             .then(function (r) { return _this.$responseHandler(r); })
-            .catch(function (e) { return _this.$errorHandler(e); });
+            .catch(function (e) { return _this.$errorHandler(e, url, config, requestFunction); });
     };
     /**
      * Request method alias factory.
@@ -202,7 +216,6 @@ var GenericAPIClient = /** @class */ (function () {
     GenericAPIClient.prototype.$alias = function (method) {
         return function (url, fetchConfig, overrideDefaultConfig) {
             if (fetchConfig === void 0) { fetchConfig = this.$baseClientConfig; }
-            fetchConfig = fetchConfig;
             fetchConfig.method = method ? method.toUpperCase() : (fetchConfig.method || 'GET').toUpperCase();
             return this.$request(url, fetchConfig, overrideDefaultConfig);
         };
