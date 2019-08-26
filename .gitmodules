@@ -1,3 +1,0 @@
-[submodule ".commitlint"]
-	path = .commitlint
-	url = https://github.com/KazanExpress/ke-frontend-commitlint.git
