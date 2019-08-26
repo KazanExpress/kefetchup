@@ -1,6 +1,8 @@
 import { defaultFetch } from './defaultFetch';
 import { ResponseError, ResponseErrors } from './errors';
 
+export type RequestFunction = (url: string, config?: RequestInit) => Promise<Response>;
+
 /**
  * Generic API client with default request.
  * Inherit from this class to create a custom extendable api client.
@@ -74,9 +76,13 @@ export class GenericAPIClient {
    *
    * @protected
    * @param e the error catched from the request promise
+   * @param url a url string that would be passed into the request function
+   * @param config a request config that would be passed into the request function
+   * @param request a function that performs a request (for retrying purposes)
    * @memberof GenericAPIClient
    */
-  protected $errorHandler(e): any {
+  //@ts-ignore
+  protected $errorHandler(e: any, url: string, config: RequestInit, request: RequestFunction): any {
     if (e instanceof ResponseError) {
       throw e;
     } else {
@@ -98,11 +104,11 @@ export class GenericAPIClient {
   protected $requestFactory(
     url: string,
     config: RequestInit,
-    requestFunction: (url: string, config?: RequestInit) => Promise<Response>
+    requestFunction: RequestFunction
   ): Promise<any> {
     return requestFunction(url, config)
       .then(r => this.$responseHandler(r))
-      .catch(e => this.$errorHandler(e));
+      .catch(e => this.$errorHandler(e, url, config, requestFunction));
   }
 
   /**
@@ -121,7 +127,6 @@ export class GenericAPIClient {
       fetchConfig: RequestInit = this.$baseClientConfig,
       overrideDefaultConfig?: boolean
     ): ReturnType<typeof this['$request']> {
-      fetchConfig = fetchConfig;
       fetchConfig.method = method ? method.toUpperCase() : (fetchConfig.method || 'GET').toUpperCase();
       return this.$request(url, fetchConfig, overrideDefaultConfig);
     }
