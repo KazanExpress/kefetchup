@@ -47,7 +47,7 @@ describe('GenericAPIClient', () => {
       }
     }
 
-    (client as any).$requestFactory('', {}, fetchHandler).catch(e => {
+    (client as any).$requestFactory('', {}, fetchHandler).catch((e: Error) => {
       expect(e).toBeInstanceOf(ResponseError);
     });
   });

@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { GenericAPIClient } from '../src';
+import { GenericAPIClient, ResponseError } from '../src';
 
 export const realFetch = window.fetch;
 
@@ -27,7 +27,7 @@ export class TestAPIClient extends GenericAPIClient {
     return r.json();
   }
 
-  protected $errorHandler(e) {
+  protected $errorHandler(e: ResponseError) {
     return e.data;
   }
 
