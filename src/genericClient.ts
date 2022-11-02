@@ -148,9 +148,9 @@ export class GenericAPIClient {
    * @param {number|string} [status=-1] Response status ("NotFound", "OK", "Unknown", etc)
    * @returns {number} a status number for requests
    */
-  public static handleStatus(status: string): number;
+  public static handleStatus(status: keyof typeof ResponseErrors): number;
 
-  public static handleStatus(status: number | string = -1) {
+  public static handleStatus(status: keyof typeof ResponseErrors | number = -1) {
     return ResponseErrors[status] || ResponseErrors[-1];
   }
 }

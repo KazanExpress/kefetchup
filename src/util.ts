@@ -15,17 +15,17 @@ withQuery('/list', {
  * @param {Object} queryParams query params in object form
  * @returns url with encoded params
  */
-export function withQuery<T extends object>(url: string, queryParams: T) {
-  const encodeQuery = (value, key) => `${encodeURIComponent(key)}=${encodeURI(value)}`;
+export function withQuery<T extends Record<string, unknown>>(url: string, queryParams: T) {
+  const encodeQuery = (value: string, key: string | number | boolean) => `${encodeURIComponent(key)}=${encodeURI(value)}`;
 
   const queryArr = Object.keys(queryParams)
     .filter(k => !!k && queryParams[k] !== undefined)
-    .map((k: any) => {
+    .map((k) => {
       if (Array.isArray(queryParams[k])) {
-        return encodeQuery(queryParams[k].join(','), k);
+        return encodeQuery((queryParams[k] as Array<unknown>).join(','), k);
       }
 
-      return encodeQuery(queryParams[k], k);
+      return encodeQuery(String(queryParams[k]), k);
     });
 
   const queryStr = queryArr.length !== 1 ? queryArr.join('&') : queryArr[0];
