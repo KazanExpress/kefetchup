@@ -16,7 +16,7 @@ withQuery('/list', {
  * @returns url with encoded params
  */
 export function withQuery<T extends Record<string, unknown>>(url: string, queryParams: T) {
-  const encodeQuery = (value: string, key: string | number | boolean) => `${encodeURIComponent(key)}=${encodeURI(value)}`;
+  const encodeQuery = (value: string, key: string) => `${encodeURIComponent(key)}=${encodeURI(value)}`;
 
   const queryArr = Object.keys(queryParams)
     .filter(k => !!k && queryParams[k] !== undefined)
