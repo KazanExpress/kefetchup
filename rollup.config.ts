@@ -1,9 +1,8 @@
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import sourceMaps from 'rollup-plugin-sourcemaps';
-import typescript from 'rollup-plugin-typescript2';
-import { uglify } from 'rollup-plugin-uglify';
-import json from 'rollup-plugin-json';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import typescript from '@rollup/plugin-typescript';
+import uglify from '@lopatnov/rollup-plugin-uglify';
+import json from '@rollup/plugin-json';
 
 const input = `src/index.ts`;
 const output = format => `dist/kefetchup.${format}.js`;
@@ -17,25 +16,19 @@ const common = target => ({
     // Allow json resolution
     json(),
     // Compile TypeScript files
-    typescript({ useTsconfigDeclarationDir: true, tsconfigOverride: { compilerOptions: {
+    typescript({ compilerOptions: {
       target
-    } } }),
+    } }),
 
     // Allow node_modules resolution, so you can use 'external' to control
     // which external modules to include in the bundle
     // https://github.com/rollup/rollup-plugin-node-resolve#usage
-    resolve({
-      module: true,
-      jsnext: true
-    }),
+    resolve(),
 
     // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
     commonjs(),
 
-    uglify({}),
-
-    // Resolve source maps to the original source
-    sourceMaps()
+    uglify(),
   ],
 });
 
