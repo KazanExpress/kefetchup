@@ -21,7 +21,7 @@ describe('GenericAPIClient', () => {
 
       // DISCLAIMER: this should never happen.
       expect(true).toBe(false);
-    } catch (e) {
+    } catch (e: any) {
       expect(e).toBeInstanceOf(ResponseError);
       expect(e.data).toMatchObject({});
     }
@@ -31,7 +31,7 @@ describe('GenericAPIClient', () => {
     for (const error of errors) {
       try {
         (client as any).$errorHandler(error);
-      } catch (e) {
+      } catch (e: any) {
         expect(e).toBeInstanceOf(ResponseError);
         if (e.status !== -1) {
           expect(e).toBe(error);
