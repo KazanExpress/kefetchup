@@ -1,3 +1,5 @@
+import { defaultFetch } from './defaultFetch';
+import { ResponseErrors } from './errors';
 export declare type RequestFunction = (url: string, config?: RequestInit) => Promise<Response>;
 /**
  * Generic API client with default request.
@@ -8,7 +10,7 @@ export declare type RequestFunction = (url: string, config?: RequestInit) => Pro
 export declare class GenericAPIClient {
     readonly $baseURL: string;
     readonly $baseClientConfig: RequestInit;
-    $fetchHandler: any;
+    $fetchHandler: typeof defaultFetch;
     /**
      * Creates an instance of GenericAPIClient.
      * @param {string} [$baseURL=''] a base url to prepend to all request urls except for the ones with root urls
@@ -66,7 +68,7 @@ export declare class GenericAPIClient {
      * @returns an alias function for request
      * @memberof GenericAPIClient
      */
-    protected $alias(method: string): (this: GenericAPIClient, url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean | undefined) => Promise<any>;
+    protected $alias(method: string): (this: GenericAPIClient, url: string, fetchConfig?: RequestInit, overrideDefaultConfig?: boolean) => Promise<any>;
     /**
      * Retrieves response status string in a readable format from a status number
      *
@@ -80,5 +82,5 @@ export declare class GenericAPIClient {
      * @param {number|string} [status=-1] Response status ("NotFound", "OK", "Unknown", etc)
      * @returns {number} a status number for requests
      */
-    static handleStatus(status: string): number;
+    static handleStatus(status: keyof typeof ResponseErrors): number;
 }

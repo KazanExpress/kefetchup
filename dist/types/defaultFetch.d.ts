@@ -8,17 +8,9 @@ import { ResponseErrors } from './errors';
  * @returns {Promise<Response>}
  */
 export declare function defaultFetch(url: string, options?: RequestInit): Promise<Response>;
-export declare const defaultFetchHandlerResponseBody: (url: string, options?: RequestInit | undefined) => {
-    error: string;
-} | {
-    options: RequestInit;
-    error: string;
-} | {
-    to: string;
-    error: string;
-} | {
-    options: RequestInit;
-    to: string;
+export declare const defaultFetchHandlerResponseBody: (url: string, options?: RequestInit) => {
+    options?: RequestInit | undefined;
+    to?: string | undefined;
     error: string;
 };
 export declare const defaultFetchHandlerResponseOptions: {

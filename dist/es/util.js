@@ -23,7 +23,7 @@ export function withQuery(url, queryParams) {
         if (Array.isArray(queryParams[k])) {
             return encodeQuery(queryParams[k].join(','), k);
         }
-        return encodeQuery(queryParams[k], k);
+        return encodeQuery(String(queryParams[k]), k);
     });
     const queryStr = queryArr.length !== 1 ? queryArr.join('&') : queryArr[0];
     const prefix = (url.indexOf('?') > -1 ? '&' : '?');

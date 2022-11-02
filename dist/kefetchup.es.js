@@ -58,7 +58,7 @@ var ResponseErrors;
 function defaultFetch(url, options) {
     return Promise.resolve(new Response(JSON.stringify(defaultFetchHandlerResponseBody(url, options)), defaultFetchHandlerResponseOptions));
 }
-const defaultFetchHandlerResponseBody = (url, options) => (Object.assign({ error: 'Default-fetch-handler response.' }, (url === undefined ? {} : { to: url }), (options === undefined ? {} : { options })));
+const defaultFetchHandlerResponseBody = (url, options) => (Object.assign(Object.assign({ error: 'Default-fetch-handler response.' }, (url === undefined ? {} : { to: url })), (options === undefined ? {} : { options })));
 const defaultFetchHandlerResponseOptions = {
     status: ResponseErrors[`I'm a teapot`],
     statusText: (typeof fetch !== 'undefined') ? 'why do you use mee?..' : '`fetch` missing in `window`'
@@ -91,7 +91,7 @@ class GenericAPIClient {
             url = this.$baseURL ? new URL(url, this.$baseURL).href : url;
         }
         return this.$requestFactory(url, overrideDefaultConfig ?
-            fetchConfig : Object.assign({}, this.$baseClientConfig, fetchConfig, { headers: Object.assign({}, (this.$baseClientConfig.headers || {}), (fetchConfig.headers || {})) }), this.$fetchHandler);
+            fetchConfig : Object.assign(Object.assign(Object.assign({}, this.$baseClientConfig), fetchConfig), { headers: Object.assign(Object.assign({}, (this.$baseClientConfig.headers || {})), (fetchConfig.headers || {})) }), this.$fetchHandler);
     }
     /**
      * Processes the response before allowing to return its value from request function.
@@ -196,7 +196,7 @@ function withQuery(url, queryParams) {
         if (Array.isArray(queryParams[k])) {
             return encodeQuery(queryParams[k].join(','), k);
         }
-        return encodeQuery(queryParams[k], k);
+        return encodeQuery(String(queryParams[k]), k);
     });
     const queryStr = queryArr.length !== 1 ? queryArr.join('&') : queryArr[0];
     const prefix = (url.indexOf('?') > -1 ? '&' : '?');

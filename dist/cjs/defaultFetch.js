@@ -11,6 +11,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.defaultFetchHandlerResponseOptions = exports.defaultFetchHandlerResponseBody = exports.defaultFetch = void 0;
 var errors_1 = require("./errors");
 /**
  * Default fetch handler
@@ -21,10 +22,11 @@ var errors_1 = require("./errors");
  * @returns {Promise<Response>}
  */
 function defaultFetch(url, options) {
-    return Promise.resolve(new Response(JSON.stringify(exports.defaultFetchHandlerResponseBody(url, options)), exports.defaultFetchHandlerResponseOptions));
+    return Promise.resolve(new Response(JSON.stringify((0, exports.defaultFetchHandlerResponseBody)(url, options)), exports.defaultFetchHandlerResponseOptions));
 }
 exports.defaultFetch = defaultFetch;
-exports.defaultFetchHandlerResponseBody = function (url, options) { return (__assign({ error: 'Default-fetch-handler response.' }, (url === undefined ? {} : { to: url }), (options === undefined ? {} : { options: options }))); };
+var defaultFetchHandlerResponseBody = function (url, options) { return (__assign(__assign({ error: 'Default-fetch-handler response.' }, (url === undefined ? {} : { to: url })), (options === undefined ? {} : { options: options }))); };
+exports.defaultFetchHandlerResponseBody = defaultFetchHandlerResponseBody;
 exports.defaultFetchHandlerResponseOptions = {
     status: errors_1.ResponseErrors["I'm a teapot"],
     statusText: (typeof fetch !== 'undefined') ? 'why do you use mee?..' : '`fetch` missing in `window`'

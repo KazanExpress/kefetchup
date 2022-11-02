@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.withQuery = void 0;
 /**
  * Encode an object into the plain URL as url-query-string
  *
@@ -18,14 +19,14 @@ withQuery('/list', {
  * @returns url with encoded params
  */
 function withQuery(url, queryParams) {
-    var encodeQuery = function (value, key) { return encodeURIComponent(key) + "=" + encodeURI(value); };
+    var encodeQuery = function (value, key) { return "".concat(encodeURIComponent(key), "=").concat(encodeURI(value)); };
     var queryArr = Object.keys(queryParams)
         .filter(function (k) { return !!k && queryParams[k] !== undefined; })
         .map(function (k) {
         if (Array.isArray(queryParams[k])) {
             return encodeQuery(queryParams[k].join(','), k);
         }
-        return encodeQuery(queryParams[k], k);
+        return encodeQuery(String(queryParams[k]), k);
     });
     var queryStr = queryArr.length !== 1 ? queryArr.join('&') : queryArr[0];
     var prefix = (url.indexOf('?') > -1 ? '&' : '?');

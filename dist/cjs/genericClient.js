@@ -11,6 +11,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GenericAPIClient = void 0;
 var defaultFetch_1 = require("./defaultFetch");
 var errors_1 = require("./errors");
 /**
@@ -43,7 +44,7 @@ var GenericAPIClient = /** @class */ (function () {
             url = this.$baseURL ? new URL(url, this.$baseURL).href : url;
         }
         return this.$requestFactory(url, overrideDefaultConfig ?
-            fetchConfig : __assign({}, this.$baseClientConfig, fetchConfig, { headers: __assign({}, (this.$baseClientConfig.headers || {}), (fetchConfig.headers || {})) }), this.$fetchHandler);
+            fetchConfig : __assign(__assign(__assign({}, this.$baseClientConfig), fetchConfig), { headers: __assign(__assign({}, (this.$baseClientConfig.headers || {})), (fetchConfig.headers || {})) }), this.$fetchHandler);
     };
     /**
      * Processes the response before allowing to return its value from request function.
@@ -83,7 +84,9 @@ var GenericAPIClient = /** @class */ (function () {
         else {
             // Network error!
             throw new errors_1.ResponseError('Unkown Error: ', errors_1.ResponseErrors.UnknownError, e, {
-                url: url, config: config, request: request
+                url: url,
+                config: config,
+                request: request
             });
         }
     };

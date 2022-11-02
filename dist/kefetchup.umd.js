@@ -109,7 +109,7 @@
     function defaultFetch(url, options) {
         return Promise.resolve(new Response(JSON.stringify(defaultFetchHandlerResponseBody(url, options)), defaultFetchHandlerResponseOptions));
     }
-    var defaultFetchHandlerResponseBody = function (url, options) { return (__assign({ error: 'Default-fetch-handler response.' }, (url === undefined ? {} : { to: url }), (options === undefined ? {} : { options: options }))); };
+    var defaultFetchHandlerResponseBody = function (url, options) { return (__assign(__assign({ error: 'Default-fetch-handler response.' }, (url === undefined ? {} : { to: url })), (options === undefined ? {} : { options: options }))); };
     var defaultFetchHandlerResponseOptions = {
         status: exports.ResponseErrors["I'm a teapot"],
         statusText: (typeof fetch !== 'undefined') ? 'why do you use mee?..' : '`fetch` missing in `window`'
@@ -145,7 +145,7 @@
                 url = this.$baseURL ? new URL(url, this.$baseURL).href : url;
             }
             return this.$requestFactory(url, overrideDefaultConfig ?
-                fetchConfig : __assign({}, this.$baseClientConfig, fetchConfig, { headers: __assign({}, (this.$baseClientConfig.headers || {}), (fetchConfig.headers || {})) }), this.$fetchHandler);
+                fetchConfig : __assign(__assign(__assign({}, this.$baseClientConfig), fetchConfig), { headers: __assign(__assign({}, (this.$baseClientConfig.headers || {})), (fetchConfig.headers || {})) }), this.$fetchHandler);
         };
         /**
          * Processes the response before allowing to return its value from request function.
@@ -185,7 +185,9 @@
             else {
                 // Network error!
                 throw new ResponseError('Unkown Error: ', exports.ResponseErrors.UnknownError, e, {
-                    url: url, config: config, request: request
+                    url: url,
+                    config: config,
+                    request: request
                 });
             }
         };
@@ -247,14 +249,14 @@
      * @returns url with encoded params
      */
     function withQuery(url, queryParams) {
-        var encodeQuery = function (value, key) { return encodeURIComponent(key) + "=" + encodeURI(value); };
+        var encodeQuery = function (value, key) { return "".concat(encodeURIComponent(key), "=").concat(encodeURI(value)); };
         var queryArr = Object.keys(queryParams)
             .filter(function (k) { return !!k && queryParams[k] !== undefined; })
             .map(function (k) {
             if (Array.isArray(queryParams[k])) {
                 return encodeQuery(queryParams[k].join(','), k);
             }
-            return encodeQuery(queryParams[k], k);
+            return encodeQuery(String(queryParams[k]), k);
         });
         var queryStr = queryArr.length !== 1 ? queryArr.join('&') : queryArr[0];
         var prefix = (url.indexOf('?') > -1 ? '&' : '?');

@@ -15,4 +15,4 @@ withQuery('/list', {
  * @param {Object} queryParams query params in object form
  * @returns url with encoded params
  */
-export declare function withQuery<T extends object>(url: string, queryParams: T): string;
+export declare function withQuery<T extends Record<string, unknown>>(url: string, queryParams: T): string;

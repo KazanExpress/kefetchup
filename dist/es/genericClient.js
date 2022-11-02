@@ -27,7 +27,7 @@ export class GenericAPIClient {
             url = this.$baseURL ? new URL(url, this.$baseURL).href : url;
         }
         return this.$requestFactory(url, overrideDefaultConfig ?
-            fetchConfig : Object.assign({}, this.$baseClientConfig, fetchConfig, { headers: Object.assign({}, (this.$baseClientConfig.headers || {}), (fetchConfig.headers || {})) }), this.$fetchHandler);
+            fetchConfig : Object.assign(Object.assign(Object.assign({}, this.$baseClientConfig), fetchConfig), { headers: Object.assign(Object.assign({}, (this.$baseClientConfig.headers || {})), (fetchConfig.headers || {})) }), this.$fetchHandler);
     }
     /**
      * Processes the response before allowing to return its value from request function.
